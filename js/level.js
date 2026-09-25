@@ -5,15 +5,17 @@
   // seviye ilerledikçe ikişer ikişer açılır (bkz. RT.unlockedCount).
   // Görsel: assets/tiles/<ad>.png. Görseli henüz gelmemiş taşlarda geçici emoji
   // gösterilir — PNG eklendikçe adını RT.TILE_ART'a yaz.
+  // Sıra = sprite sheet sırası (soldan sağa, yukarıdan aşağı): assets/source/tiles-1/2/3.webp
   RT.TILE_EMOJI = {
+    // 1. sayfa (baştan açık 16 taş)
     mushroom: "🍄", bat: "🦇", frog: "🐸", spider: "🕷️", potion: "🧪", crystal: "🔮", candle: "🕯️", eye: "👁️",
-    moon: "🌙", apple: "🍎", pumpkin: "🎃", skull: "💀", cat: "🐈‍⬛", owl: "🦉", herb: "🌿", feather: "🪶",
-    // 2. paket
+    moon: "🌙", apple: "🍎", pumpkin: "🎃", skull: "💀", cat: "🐈‍⬛", owl: "🦉", mandrake: "🌱", feather: "🪶",
+    // 2. sayfa
     snake: "🐍", broom: "🧹", bone: "🦴", star: "⭐", key: "🗝️", scroll: "📜", gem: "💎", garlic: "🧄",
-    rose: "🌹", snail: "🐌", lizard: "🦎", rat: "🐀", beetle: "🪲", wand: "🪄", amulet: "🧿", web: "🕸️",
-    // 3. paket
-    scorpion: "🦂", pepper: "🌶️", acorn: "🌰", honey: "🍯", alembic: "⚗️", tooth: "🦷", fire: "🔥", frost: "❄️",
-    berries: "🍇", leaf: "🍂", wilted: "🥀", caterpillar: "🐛", nest: "🪺", root: "🫚", book: "📖", hourglass: "⏳"
+    rose: "🌹", snail: "🐌", lizard: "🦎", rat: "🐀", beetle: "🪲", wand: "🪄", amulet: "🧿", spellbook: "📖",
+    // 3. sayfa
+    scorpion: "🦂", pepper: "🌶️", acorn: "🌰", honey: "🍯", mortar: "🥣", fang: "🦷", wisp: "🔥", frost: "❄️",
+    berries: "🫐", leaf: "🍂", hat: "🎩", caterpillar: "🐛", nest: "🪺", ghost: "👻", hourglass: "⏳", mirror: "🪞"
   };
   RT.TILE_TYPES = Object.keys(RT.TILE_EMOJI);
   RT.TILE_ART = {}; // PNG'si hazır olan türler, ör. { mushroom: true }

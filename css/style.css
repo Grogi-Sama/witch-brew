@@ -165,9 +165,39 @@ img { -webkit-user-drag: none; user-select: none; }
   font-size: 28px; padding: 14px 18px; text-shadow: 0 2px 0 rgba(120,45,10,.45);
 }
 .btn-play svg { width: 26px; height: 26px; vertical-align: -4px; filter: drop-shadow(0 2px 0 rgba(120,30,10,.45)); }
-#screen-menu .btn-play { animation: breathe 2.4s ease-in-out infinite; }
+/* ---------- Isırılmış Oyna butonu ----------
+   Sarmalayıcı (.bite) maskeyle sağ üst köşeden diş izli bir parça koparır.
+   Sarmalayıcının altındaki boşluk, butonun 3D kenarı maskeyle kesilmesin diye.
+   ::after, ısırık kenarına koyu kontur çizer (aynı dairelerin halkaları). */
+.bite {
+  position: relative; width: 100%; max-width: 320px; padding-bottom: 6px;
+  mask:
+    radial-gradient(circle 13px at calc(100% - 30px) 0, #0000 98%, #000),
+    radial-gradient(circle 13px at calc(100% - 26px) 15px, #0000 98%, #000),
+    radial-gradient(circle 13px at calc(100% - 15px) 26px, #0000 98%, #000),
+    radial-gradient(circle 13px at 100% 30px, #0000 98%, #000),
+    radial-gradient(circle 32px at 100% 0, #0000 98%, #000);
+  mask-composite: intersect;
+  animation: breathe 2.4s ease-in-out infinite;
+}
+.bite::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background:
+    radial-gradient(circle 16px at calc(100% - 30px) 0, #0000 13px, var(--outline) 13.5px, var(--outline) 16px, #0000 16.5px),
+    radial-gradient(circle 16px at calc(100% - 26px) 15px, #0000 13px, var(--outline) 13.5px, var(--outline) 16px, #0000 16.5px),
+    radial-gradient(circle 16px at calc(100% - 15px) 26px, #0000 13px, var(--outline) 13.5px, var(--outline) 16px, #0000 16.5px),
+    radial-gradient(circle 16px at 100% 30px, #0000 13px, var(--outline) 13.5px, var(--outline) 16px, #0000 16.5px);
+}
+.bite:active { animation: none; }
 @keyframes breathe { 50% { transform: scale(1.035); } }
-#screen-menu .btn-play:active { animation: none; }
+
+/* ---------- Örümcek ağı süsü (Eğitim butonu sol üst köşe) ----------
+   Geçici emoji; UI görselleri gelince assets/ui/cobweb.png ile değişecek. */
+.deco-web {
+  position: absolute; top: -10px; left: -8px; font-size: 34px; line-height: 1;
+  transform: rotate(-12deg); opacity: .9; pointer-events: none; z-index: 1;
+  filter: grayscale(1) brightness(1.6) drop-shadow(0 1px 0 rgba(0,0,0,.25));
+}
 .btn-play.small { font-size: 17px; padding: 6px 14px; width: auto; border-radius: 14px; box-shadow: 0 4px 0 var(--outline), inset 0 -3px 0 var(--edge); }
 .btn-blue { --face1: #c9a3ff; --face2: #8a4fe0; --edge: #6a35b8; --txt: var(--white); text-shadow: 0 2px 0 rgba(50,20,90,.45); }
 .btn-green { --face1: #8ee887; --face2: #3fb950; --edge: #2a8f3a; --txt: var(--white); text-shadow: 0 2px 0 rgba(10,70,20,.4); }
