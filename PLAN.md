@@ -9,7 +9,14 @@ Yanglegeyang tarzı üçlü eşleştirme oyunu. Kardeş proje "Triple Match – 
 - **Temel oyun mantığı:** Blue Ocean ile aynı. Aynı 3 taşı kazana at, eşleşenler yok olur; kazan dolarsa kaybedilir.
 - **Fark:** Oyuncu **Oyna'ya her bastığında reklam izleyecek** (seviye başı tam ekran reklam).
 
-## Tartışılacak kararlar
+## Verilen kararlar (2026-09-25)
+- **Reklam:** Her Oyna'da tam ekran reklam; ilk 3 seviye hariç, iki reklam arası en az 60 sn. "Tekrar Dene"de ayrıca reklam yok (60 sn kuralı kapsar). Web sürümünde sahte reklam ekranı; gerçek AdMob sadece Capacitor sürümünde.
+- **Reklamları Kaldır:** Var, tek seferlik satın alım. Zorunlu reklamları kaldırır; ödüllü reklamlar kalır.
+- **Ekonomi:** Can sistemi yok, sınırsız oyun. Jokerler coinle veya ödüllü reklamla alınır (ödüllü reklam, kullanıcının onayladığı ücretsiz kaynak). Coin başka ücretsiz yoldan verilmez.
+- **İmza mekanik:** İksir tarifi, bonus hedef (zorunlu değil). Zorunlu tarif seviyeleri ileride eklenebilir.
+- **Açık kalanlar:** Başlangıç noktası (5), isim (3), GitHub reposu (6).
+
+## Tartışılacak kararlar (ilk taslak)
 Her maddedeki ⭐, Claude'un önerisi.
 
 1. **Reklam sıklığı**
