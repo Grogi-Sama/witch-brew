@@ -295,16 +295,58 @@ img { -webkit-user-drag: none; user-select: none; }
    arka plan olarak buraya eklenecek. */
 .tray {
   display: flex; justify-content: center; gap: 2px;
-  margin: 6px 10px 8px; padding: 8px 8px 12px;
+  position: relative; z-index: 1; margin: 0; padding: 10px 8px 12px;
   background:
     radial-gradient(90% 60% at 50% 0%, rgba(125,255,138,.35), transparent 70%),
-    linear-gradient(#4a4058, #2a2334 60%, #1b1622);
+    linear-gradient(90deg, rgba(255,255,255,0) 8%, rgba(255,255,255,.1) 18%, rgba(255,255,255,0) 30%),
+    linear-gradient(#5a4f6b, #342c40 60%, #241d2e);
   border: 3px solid var(--outline); border-radius: 18px 18px 38px 38px;
   box-shadow: inset 0 3px 0 rgba(180,255,190,.35), 0 5px 0 #120e18, 0 0 22px rgba(125,255,138,.25);
   transition: box-shadow .2s;
 }
 .tray.danger { box-shadow: inset 0 3px 0 rgba(180,255,190,.35), 0 5px 0 #120e18, 0 0 0 3px #ff5a4a, 0 0 18px #ff5a4a; }
 .tray.pop { animation: pop .3s; }
+/* Kazanın süsleri: kulplar (.cauldron::before/::after), kalın ağız kenarı
+   (.tray::before), üç ayak ve ağızdan yükselen kabarcıklar */
+.cauldron { position: relative; margin: 10px 26px 28px; }
+.cauldron::before, .cauldron::after {
+  content: ""; position: absolute; top: 14px; width: 30px; height: 36px; border-radius: 50%;
+  border: 6px solid #7a6e8e; box-shadow: 0 0 0 3px var(--outline), inset 0 0 0 3px var(--outline);
+}
+.cauldron::before { left: -21px; }
+.cauldron::after { right: -21px; }
+.tray::before {
+  content: ""; position: absolute; top: -8px; left: -7px; right: -7px; height: 14px; border-radius: 10px;
+  background: linear-gradient(#6a5f7c, #3a3346 60%, #2a2334); border: 3px solid var(--outline);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.18), 0 2px 8px rgba(125,255,138,.35);
+}
+.c-feet {
+  position: absolute; left: 13%; right: 13%; bottom: -24px; z-index: 0;
+  display: flex; justify-content: space-between;
+}
+.c-feet i {
+  width: 32px; height: 30px; background: linear-gradient(90deg, #5a4f6b, #8a7ea0 35%, #4a4058);
+  border: 3px solid var(--outline); border-top: 0; border-radius: 0 0 12px 12px;
+}
+.c-feet i:nth-child(2) { height: 26px; }
+.c-bubbles { position: absolute; left: 6%; right: 6%; top: -8px; height: 0; z-index: 2; pointer-events: none; }
+.c-bubbles i {
+  position: absolute; bottom: 0; width: 10px; height: 10px; border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle at 35% 35%, #eaffec, #7dff8a 55%, #3fb950);
+  border: 1.5px solid rgba(18,58,77,.6); animation: cBubble 3.2s ease-in infinite;
+}
+.c-bubbles i:nth-child(1) { left: 8%;  animation-delay: 0s; }
+.c-bubbles i:nth-child(2) { left: 30%; animation-delay: 1.3s; width: 7px; height: 7px; }
+.c-bubbles i:nth-child(3) { left: 52%; animation-delay: 2.1s; }
+.c-bubbles i:nth-child(4) { left: 71%; animation-delay: .6s; width: 8px; height: 8px; }
+.c-bubbles i:nth-child(5) { left: 90%; animation-delay: 2.6s; width: 6px; height: 6px; }
+@keyframes cBubble {
+  0% { opacity: 0; transform: translateY(4px) scale(.5); }
+  15% { opacity: 1; }
+  70% { opacity: 1; transform: translateY(-18px) scale(1); }
+  80% { opacity: 0; transform: translateY(-20px) scale(1.5); }
+  100% { opacity: 0; }
+}
 @keyframes pop { 50% { transform: scale(1.03); } }
 .slot {
   width: var(--slot); height: calc(var(--slot) * 1.05); border-radius: 10px;

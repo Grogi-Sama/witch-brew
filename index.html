@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=10">
+  <link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body>
   <!-- Arka plan: gece moru gradyan + yükselen kazan kabarcıkları (dekoratif) -->
@@ -73,8 +73,13 @@
       <!-- Kepçeyle Al jokeriyle çıkarılan, eşlerini bekleyen kilitli taşlar -->
       <div id="bank" class="bank"></div>
 
-      <!-- Kazan: 7 yuvalı sepet (kodda "tray") -->
-      <div id="tray" class="tray"></div>
+      <!-- Kazan: 7 yuvalı sepet (kodda "tray"). Kulplar, ayaklar ve kabarcıklar
+           süs; #tray her çizimde yeniden doldurulduğu için süsler dışarıda. -->
+      <div class="cauldron">
+        <div id="tray" class="tray"></div>
+        <div class="c-feet" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="c-bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
 
       <div class="jokers">
         <button class="joker" data-joker="undo"><span class="j-icon"><img src="assets/jokers/undo.png" alt="" draggable="false"></span><span class="j-name" data-i18n="jUndo">Geri Al</span><b class="j-count"></b></button>
@@ -92,11 +97,11 @@
     <div id="toast" class="toast" hidden></div>
   </div>
 
-  <script src="js/i18n.js?v=10"></script>
-  <script src="js/storage.js?v=10"></script>
-  <script src="js/audio.js?v=10"></script>
-  <script src="js/level.js?v=10"></script>
-  <script src="js/game.js?v=10"></script>
-  <script src="js/ui.js?v=10"></script>
+  <script src="js/i18n.js?v=13"></script>
+  <script src="js/storage.js?v=13"></script>
+  <script src="js/audio.js?v=13"></script>
+  <script src="js/level.js?v=13"></script>
+  <script src="js/game.js?v=13"></script>
+  <script src="js/ui.js?v=13"></script>
 </body>
 </html>
