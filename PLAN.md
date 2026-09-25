@@ -14,7 +14,9 @@ Yanglegeyang tarzı üçlü eşleştirme oyunu. Kardeş proje "Triple Match – 
 - **Reklamları Kaldır:** Var, tek seferlik satın alım. Zorunlu reklamları kaldırır; ödüllü reklamlar kalır.
 - **Ekonomi:** Can sistemi yok, sınırsız oyun. Jokerler coinle veya ödüllü reklamla alınır (ödüllü reklam, kullanıcının onayladığı ücretsiz kaynak). Coin başka ücretsiz yoldan verilmez.
 - **İmza mekanik:** İksir tarifi, bonus hedef (zorunlu değil). Zorunlu tarif seviyeleri ileride eklenebilir.
-- **Açık kalanlar:** Başlangıç noktası (5), isim (3), GitHub reposu (6).
+- **Başlangıç:** Blue Ocean kodunun kopyası (git geçmişi olmadan). Can ve takvim sökülür; kazan teması ve tarif eklenir. Blue Ocean'a dokunulmaz.
+- **İsim:** EN "Triple Match – Witch's Brew" / TR "Üçlü Eşleştirme – Cadı Kazanı". Tekrarlayan içerik riskine karşı görsel dil ve tarif mekaniği belirgin farklı olmalı.
+- **GitHub:** Ayrı repo `witch-brew`. Push, kullanıcı onay verince yapılır.
 
 ## Tartışılacak kararlar (ilk taslak)
 Her maddedeki ⭐, Claude'un önerisi.
