@@ -15,13 +15,20 @@
   }
   RT.ui.show = show;
 
-  // ---------- Üst bilgiler (coin / seviye) ----------
+  // ---------- Üst bilgiler (can / coin / seviye) ----------
   function refreshHud() {
-    var s = RT.save;
+    RT.tickLives();
+    var s = RT.save, full = s.lives >= RT.CONFIG.LIVES_MAX;
+    document.querySelectorAll(".lives-count").forEach(function (e) { e.textContent = s.lives; });
     document.querySelectorAll(".coin-count").forEach(function (e) { e.textContent = shortNum(s.coins); });
     document.getElementById("menuLevel").textContent = s.level;
+    document.querySelector("#menuLives .lives-timer").textContent = full ? "" : RT.formatTime(RT.msToNextLife());
+    document.querySelectorAll(".lives-pill").forEach(function (p) { p.classList.toggle("not-full", !full); });
+    var nl = document.getElementById("noLivesTimer");
+    if (nl) nl.textContent = RT.formatTime(RT.msToNextLife());
   }
   RT.ui.refreshHud = refreshHud;
+  setInterval(refreshHud, 1000);
 
   // Üst bardaki sayılar dar alana sığsın: 1000 ve üstü kısaltılır (1250 -> 1.2K)
   function shortNum(n) {
@@ -31,9 +38,10 @@
   }
 
   // ---------- Modal yardımcıları ----------
-  // Çeviri metinlerindeki 🪙 emojisini oyunun kendi coin ikonuyla değiştir
+  // Çeviri metinlerindeki 🪙 / ❤️ emojilerini oyunun kendi ikonlarıyla değiştir
   var INLINE_ICONS = {
-    "🪙": '<img class="i-coin" src="assets/ui/coin.png" alt="">'
+    "🪙": '<img class="i-coin" src="assets/ui/coin.png" alt="">',
+    "❤️": '<img class="i-heart" src="assets/ui/heart.png" alt="">'
   };
   function withIcons(html) {
     for (var k in INLINE_ICONS) html = html.split(k).join(INLINE_ICONS[k]);
@@ -65,6 +73,8 @@
   // opts.retry: "Tekrar Dene" (reklam yok) · opts.adDone: reklam az önce gösterildi
   function play(opts) {
     opts = opts || {};
+    RT.tickLives();
+    if (RT.save.lives <= 0) { showLives(); return; } // cansız oyuncuya reklam da gösterilmez
     if (!opts.adDone && !opts.retry && RT.needsInterstitial(RT.save.level)) {
       closeModal();
       showInterstitial(function () { play({ adDone: true }); });
@@ -116,6 +126,7 @@
       '<div class="m-emoji">💥</div>' +
       "<h2>" + RT.t("loseTitle") + "</h2>" +
       "<p>" + RT.t("loseText") + "</p>" +
+      '<div class="m-lives">❤️ × ' + RT.save.lives + "</div>" +
       '<button class="btn btn-play" data-m="retry">' + RT.t("retry") + "</button>" +
       '<button class="btn btn-soft" data-m="menu">' + RT.t("mainMenu") + "</button>"
     );
@@ -158,6 +169,43 @@
       '<button class="btn btn-danger" data-m="quit">' + RT.t("quitLevel") + "</button>"
     );
   }
+
+  // ---------- Canlar penceresi ----------
+  // Can bittiğinde ve can göstergesine dokunulduğunda açılır: sıradaki canın
+  // süresi, reklamla +1 can (sınırsız) ve eksik canları coinle doldurma.
+  function showLives() {
+    RT.tickLives();
+    var s = RT.save, full = s.lives >= RT.CONFIG.LIVES_MAX, price = RT.refillPrice();
+    handlers.close = closeModal;
+    handlers.ad = function () {
+      watchAd(function () { RT.addLives(1); refreshHud(); showLives(); RT.ui.toast(RT.t("adDone")); });
+    };
+    handlers.refill = function () {
+      if (!RT.spendCoins(RT.refillPrice())) { RT.ui.toast(RT.t("notEnoughCoins")); showShop(showLives); return; }
+      RT.addLives(RT.CONFIG.LIVES_MAX); refreshHud(); showLives();
+    };
+    handlers.oneLife = function () {
+      if (!RT.spendCoins(RT.CONFIG.LIFE_PRICE)) { RT.ui.toast(RT.t("notEnoughCoins")); showShop(showLives); return; }
+      RT.addLives(1); refreshHud(); showLives();
+    };
+    var hearts = "";
+    for (var i = 0; i < RT.CONFIG.LIVES_MAX; i++) {
+      hearts += '<img class="lh' + (i < s.lives ? "" : " empty") + '" src="assets/ui/heart.png" alt="">';
+    }
+    openModal(
+      '<button class="m-close" data-m="close">✕</button>' +
+      "<h2>" + RT.t(s.lives <= 0 ? "noLivesTitle" : "livesTitle") + "</h2>" +
+      '<div class="lives-row">' + hearts + "</div>" +
+      (full
+        ? "<p>" + RT.t("livesFull") + "</p>"
+        : "<p>" + RT.t("noLivesText", { t: '<b id="noLivesTimer">' + RT.formatTime(RT.msToNextLife()) + "</b>" }) + "</p>" +
+          '<button class="btn btn-blue" data-m="ad">📺 ' + RT.t("watchAd") + "</button>" +
+          (RT.CONFIG.LIVES_MAX - s.lives >= 2
+            ? '<button class="btn btn-soft" data-m="oneLife">' + RT.t("oneLifeCoins", { c: RT.CONFIG.LIFE_PRICE }) + "</button>" : "") +
+          '<button class="btn btn-soft" data-m="refill">' + RT.t("refillCoins", { c: price }) + "</button>")
+    );
+  }
+  RT.ui.showLives = showLives;
 
   // Sahte reklam: gerçek reklam SDK'sı (ör. AdMob "ödüllü reklam") mobil pakette
   // eklenecek. Şimdilik AD_SKIP_SEC saniye geri sayım, sonra "Reklamı Geç" butonu;
@@ -377,6 +425,7 @@
     "open-tutorial": function () { showTutorial(0); },
     "open-settings": showSettings,
     "open-shop": showShop,
+    "open-lives": showLives,
     pause: showPause
   };
   document.querySelectorAll("[data-action]").forEach(function (b) {

@@ -74,12 +74,12 @@ button { font-family: inherit; cursor: pointer; border: 0; color: inherit; }
 }
 .pill b { font-weight: 800; text-shadow: 0 2px 0 rgba(0,0,0,.25); }
 .pill small { font-size: 13px; opacity: .9; }
-.pill .coin {
+.pill .heart, .pill .coin {
   width: 30px; height: 30px; object-fit: contain;
   filter: drop-shadow(0 2px 0 rgba(0,0,0,.25));
 }
-/* Metin içindeki küçük coin ikonu */
-.i-coin { width: 1.15em; height: 1.15em; vertical-align: -0.2em; object-fit: contain; }
+/* Metin içindeki küçük coin / can ikonları */
+.i-coin, .i-heart { width: 1.15em; height: 1.15em; vertical-align: -0.2em; object-fit: contain; }
 .pill .plus {
   margin-left: 2px; width: 24px; height: 24px; border-radius: 50%;
   background: linear-gradient(#7ee07a, #37b24d); border: 2px solid var(--outline);
@@ -105,7 +105,7 @@ button { font-family: inherit; cursor: pointer; border: 0; color: inherit; }
 .game-topbar .level-title { font-size: 18px; white-space: nowrap; }
 .game-topbar .icon-btn { width: 40px; height: 40px; }
 .game-topbar .pill.small { gap: 4px; padding: 3px 8px 3px 4px; }
-.pill.small .coin { width: 24px; height: 24px; }
+.pill.small .coin, .pill.small .heart { width: 24px; height: 24px; }
 .pill.small .plus { width: 20px; height: 20px; font-size: 15px; }
 .level-title { text-align: center; color: var(--white); font-size: 20px; text-shadow: 0 2px 0 rgba(0,0,0,.2); }
 .level-title b { font-weight: 800; }
@@ -201,7 +201,7 @@ img { -webkit-user-drag: none; user-select: none; }
 }
 /* Sarkan örümcek: menünün sol üstünden ipiyle iner, yavaşça sallanır */
 .deco-spider {
-  position: absolute; top: 0; left: 34px; z-index: 2; pointer-events: none;
+  position: absolute; top: 0; left: 40%; z-index: 2; pointer-events: none;
   display: flex; flex-direction: column; align-items: center;
   transform-origin: 50% 0; animation: swing 4.5s ease-in-out infinite;
 }
@@ -341,6 +341,7 @@ img { -webkit-user-drag: none; user-select: none; }
 .m-emoji { font-size: 56px; line-height: 1; }
 .m-img { width: 72px; height: 72px; object-fit: contain; }
 .m-emoji.spin { animation: bob 1s infinite; }
+.m-lives { font-size: 20px; font-weight: 700; }
 .m-close, .m-skip {
   position: absolute; top: -12px; right: -12px; width: 40px; height: 40px; border-radius: 50%;
   background: linear-gradient(#ff8d6e, #ff5a3c); color: var(--white); font-size: 18px; font-weight: 800;
@@ -434,6 +435,13 @@ img { -webkit-user-drag: none; user-select: none; }
 .d-tile:nth-child(2) { animation-delay: .12s; }
 .d-img { width: 82%; height: 82%; object-fit: contain; }
 @keyframes discoverIn { from { transform: scale(0) rotate(-20deg); } }
+
+/* ---------- Can göstergesi: eksikken + görünür ---------- */
+.lives-pill .plus { display: none; }
+.lives-pill.not-full .plus { display: grid; }
+.lives-row { display: flex; gap: 4px; justify-content: center; }
+.lives-row .lh { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 3px 0 rgba(0,0,0,.2)); }
+.lives-row .lh.empty { filter: grayscale(1) opacity(.35); }
 
 /* ---------- Ses seviyesi çubukları ---------- */
 .set-slider { width: 100%; display: flex; flex-direction: column; gap: 6px; }

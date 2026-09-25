@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="css/style.css?v=8">
 </head>
 <body>
   <!-- Arka plan: gece moru gradyan + yükselen kazan kabarcıkları (dekoratif) -->
@@ -23,7 +23,10 @@
       <!-- Üst kenardan ipiyle sarkan, hafifçe sallanan örümcek (süs) -->
       <div class="deco-spider" aria-hidden="true"><i></i><img src="assets/ui/spider-hang.png" alt="" draggable="false"></div>
       <header class="topbar">
-        <span></span>
+        <button class="pill lives-pill" id="menuLives" data-action="open-lives">
+          <img class="heart" src="assets/ui/heart.png" alt="" draggable="false"><b class="lives-count">5</b>
+          <small class="lives-timer"></small><span class="plus">+</span>
+        </button>
         <button class="pill coin-pill" data-action="open-shop">
           <img class="coin" src="assets/ui/coin.png" alt="" draggable="false"><b class="coin-count">0</b><span class="plus">+</span>
         </button>
@@ -52,11 +55,12 @@
     <!-- ============ OYUN EKRANI ============ -->
     <section id="screen-game" class="screen">
       <header class="topbar game-topbar">
-        <button class="pill coin-pill small" data-action="open-shop">
-          <img class="coin" src="assets/ui/coin.png" alt="" draggable="false"><b class="coin-count">0</b><span class="plus">+</span>
-        </button>
+        <button class="pill lives-pill small" data-action="open-lives"><img class="heart" src="assets/ui/heart.png" alt="" draggable="false"><b class="lives-count">5</b><span class="plus">+</span></button>
         <div class="level-title"><span data-i18n="level">Seviye</span> <b id="gameLevel">1</b></div>
         <div class="topbar-right">
+          <button class="pill coin-pill small" data-action="open-shop">
+            <img class="coin" src="assets/ui/coin.png" alt="" draggable="false"><b class="coin-count">0</b><span class="plus">+</span>
+          </button>
           <button class="icon-btn" data-action="pause" aria-label="Menü"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14"/></svg></button>
         </div>
       </header>
@@ -85,11 +89,11 @@
     <div id="toast" class="toast" hidden></div>
   </div>
 
-  <script src="js/i18n.js?v=7"></script>
-  <script src="js/storage.js?v=7"></script>
-  <script src="js/audio.js?v=7"></script>
-  <script src="js/level.js?v=7"></script>
-  <script src="js/game.js?v=7"></script>
-  <script src="js/ui.js?v=7"></script>
+  <script src="js/i18n.js?v=8"></script>
+  <script src="js/storage.js?v=8"></script>
+  <script src="js/audio.js?v=8"></script>
+  <script src="js/level.js?v=8"></script>
+  <script src="js/game.js?v=8"></script>
+  <script src="js/ui.js?v=8"></script>
 </body>
 </html>

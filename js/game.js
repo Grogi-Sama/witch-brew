@@ -197,6 +197,7 @@
   }
 
   function loseLevel() {
+    RT.spendLife(); // yumuşak can: yalnızca kaybedince (seviyeden çıkmak can götürmez)
     RT.sfx("lose");
     RT.ui.showLose(S.level);
   }

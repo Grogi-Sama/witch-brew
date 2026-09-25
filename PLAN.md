@@ -12,7 +12,10 @@ Yanglegeyang tarzı üçlü eşleştirme oyunu. Kardeş proje "Triple Match – 
 ## Verilen kararlar (2026-09-25)
 - **Reklam:** Her Oyna'da tam ekran reklam; ilk 3 seviye hariç, iki reklam arası en az 60 sn. "Tekrar Dene"de ayrıca reklam yok (60 sn kuralı kapsar). Web sürümünde sahte reklam ekranı; gerçek AdMob sadece Capacitor sürümünde.
 - **Reklamları Kaldır:** Var, tek seferlik satın alım. Zorunlu reklamları kaldırır; ödüllü reklamlar kalır.
-- **Ekonomi:** Can sistemi yok, sınırsız oyun. Jokerler coinle veya ödüllü reklamla alınır (ödüllü reklam, kullanıcının onayladığı ücretsiz kaynak). Coin başka ücretsiz yoldan verilmez.
+- **Ekonomi:** Jokerler coinle veya ödüllü reklamla alınır (ödüllü reklam, kullanıcının onayladığı ücretsiz kaynak). Coin başka ücretsiz yoldan verilmez.
+- **Can (sonradan eklendi, 2026-09-25):** Yumuşak can sistemi: en fazla 5 can, 20 dakikada 1 can dolar, yalnızca kaybedince 1 can gider (seviyeden çıkmak can götürmez). Can: reklamla +1 (sınırsız) veya coinle (eksik can başına 20, tamamı en fazla 50). Cansız oyuncuya Oyna reklamı gösterilmez, can penceresi açılır.
+- **Reklamları Kaldır fiyatı:** Şimdilik $5,49 / ₺79,99 (kullanıcı onayı bekliyor).
+- **Joker adı:** "Taşı Kaldır" → "Kepçeyle Al" (EN "Scoop Out"); ilk 3 malzemeyi kazandan yukarı alır.
 - **İmza mekanik:** İksir tarifi, bonus hedef (zorunlu değil). Zorunlu tarif seviyeleri ileride eklenebilir.
 - **Başlangıç:** Blue Ocean kodunun kopyası (git geçmişi olmadan). Can ve takvim sökülür; kazan teması ve tarif eklenir. Blue Ocean'a dokunulmaz.
 - **İsim:** EN "Triple Match – Witch's Brew" / TR "Üçlü Eşleştirme – Cadı Kazanı". Tekrarlayan içerik riskine karşı görsel dil ve tarif mekaniği belirgin farklı olmalı.

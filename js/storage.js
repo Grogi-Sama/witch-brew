@@ -1,5 +1,5 @@
-// Kalıcı veriler: coin, joker stoku, seviye, ayarlar.
-// Can sistemi yok: oyuncu sınırsız oynar (bkz. PLAN.md).
+// Kalıcı veriler: can, coin, joker stoku, seviye, ayarlar.
+// Yumuşak can sistemi: en fazla 5 can, yalnızca kaybedince gider (bkz. PLAN.md).
 // Şimdilik her şey bu cihazın localStorage'ında tutulur. Mağazaya çıkarken
 // coin/satın alma bilgisi mutlaka sunucu tarafına (hesap sistemine) taşınmalı —
 // localStorage kullanıcı tarafından kolayca değiştirilebilir.
@@ -8,10 +8,14 @@
 
   // ---- Ekonomi ayarları (tek yerden değiştirilebilsin diye burada) ----
   RT.CONFIG = {
+    LIVES_MAX: 5,
+    LIFE_REGEN_MS: 20 * 60 * 1000,   // her 20 dakikada 1 can
     START_COINS: 0,                   // coin: yalnızca gerçek para (ücretsiz kaynak: ödüllü reklamla joker/devam)
     START_JOKERS: 2,                  // her jokerden başlangıç stoku
     // Fiyatlar (referans: 100 coin ≈ 0,99 $)
     JOKER_PRICE: 25,                  // 1 joker (ya da 1 ödüllü reklam)
+    LIFE_PRICE: 20,                   // eksik can başına; tüm canları doldurma en fazla REFILL_PRICE
+    REFILL_PRICE: 50,
     CONTINUE_PRICE: 30,               // kazan dolunca coinle devam (reklam alternatifi)
     AD_SKIP_SEC: 5,                   // sahte reklamda "Reklamı Geç" butonu bu kadar saniye sonra çıkar
     // Oyna'ya basınca çıkan tam ekran reklam (bkz. PLAN.md):
@@ -37,6 +41,8 @@
 
   function defaults() {
     return {
+      lives: RT.CONFIG.LIVES_MAX,
+      lastRegen: Date.now(),
       coins: RT.CONFIG.START_COINS,
       jokers: {
         undo: RT.CONFIG.START_JOKERS, remove: RT.CONFIG.START_JOKERS,
@@ -65,8 +71,53 @@
   }
 
   RT.save = load();
+  if (RT.save.lives > RT.CONFIG.LIVES_MAX) RT.save.lives = RT.CONFIG.LIVES_MAX;
   RT.persist = function () {
     try { localStorage.setItem(KEY, JSON.stringify(RT.save)); } catch (e) {}
+  };
+
+  // ---- Can sistemi ----
+  // Can tam değilse her LIFE_REGEN_MS'de bir can dolar. Uygulama kapalıyken
+  // geçen süre de sayılır (lastRegen'den bu yana geçen süreye bakılır).
+  RT.tickLives = function () {
+    var s = RT.save, C = RT.CONFIG;
+    if (s.lives >= C.LIVES_MAX) { s.lastRegen = Date.now(); return; }
+    var gained = Math.floor((Date.now() - s.lastRegen) / C.LIFE_REGEN_MS);
+    if (gained > 0) {
+      s.lives = Math.min(C.LIVES_MAX, s.lives + gained);
+      s.lastRegen += gained * C.LIFE_REGEN_MS;
+      if (s.lives >= C.LIVES_MAX) s.lastRegen = Date.now();
+      RT.persist();
+    }
+  };
+
+  RT.msToNextLife = function () {
+    if (RT.save.lives >= RT.CONFIG.LIVES_MAX) return 0;
+    return Math.max(0, RT.save.lastRegen + RT.CONFIG.LIFE_REGEN_MS - Date.now());
+  };
+
+  RT.addLives = function (n) {
+    var wasFull = RT.save.lives >= RT.CONFIG.LIVES_MAX;
+    RT.save.lives = Math.min(RT.CONFIG.LIVES_MAX, RT.save.lives + n);
+    if (RT.save.lives >= RT.CONFIG.LIVES_MAX || wasFull) RT.save.lastRegen = Date.now();
+    RT.persist();
+  };
+
+  RT.spendLife = function () {
+    if (RT.save.lives >= RT.CONFIG.LIVES_MAX) RT.save.lastRegen = Date.now();
+    RT.save.lives = Math.max(0, RT.save.lives - 1);
+    RT.persist();
+  };
+
+  // Eksik canları doldurmanın coin fiyatı (can doluysa 0)
+  RT.refillPrice = function () {
+    var missing = RT.CONFIG.LIVES_MAX - RT.save.lives;
+    return Math.min(RT.CONFIG.REFILL_PRICE, Math.max(0, missing) * RT.CONFIG.LIFE_PRICE);
+  };
+
+  RT.formatTime = function (ms) {
+    var t = Math.ceil(ms / 1000), m = Math.floor(t / 60), s = t % 60;
+    return m + ":" + (s < 10 ? "0" : "") + s;
   };
 
   // ---- Reklam kuralı ----
