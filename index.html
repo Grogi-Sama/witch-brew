@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#2a1646">
+  <title>Triple Match – Witch's Brew</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icon/icon-32.png">
+  <link rel="apple-touch-icon" href="assets/icon/icon-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+  <!-- Arka plan: gece moru gradyan + yükselen kazan kabarcıkları (dekoratif) -->
+  <div class="night-bg" aria-hidden="true"><div id="bubbles"></div></div>
+
+  <div id="app">
+
+    <!-- ============ ANA MENÜ ============ -->
+    <section id="screen-menu" class="screen active">
+      <header class="topbar">
+        <span></span>
+        <button class="pill coin-pill" data-action="open-shop">
+          <img class="coin" src="assets/ui/coin.png" alt="" draggable="false"><b class="coin-count">0</b><span class="plus">+</span>
+        </button>
+      </header>
+
+      <div class="menu-center">
+        <div class="logo">
+          <div class="logo-icons"><span>🍄</span><span>🧪</span><span>🦇</span></div>
+          <div class="logo-top" data-i18n="titleTop">Üçlü Eşleştirme</div>
+          <h1 data-i18n="titleMain">Cadı Kazanı</h1>
+          <p class="subtitle" data-i18n="gameSubtitle">Üçünü bul, iksirini kaynat!</p>
+        </div>
+
+        <div class="level-badge"><span data-i18n="level">Seviye</span> <b id="menuLevel">1</b></div>
+        <button class="btn btn-play" data-action="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.2-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z" fill="currentColor"/></svg><span data-i18n="play">Oyna</span></button>
+
+
+        <div class="menu-row">
+          <button class="btn btn-soft" data-action="open-tutorial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></svg><span data-i18n="tutorial">Eğitim</span></button>
+          <button class="btn btn-soft" data-action="open-settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span data-i18n="settings">Ayarlar</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ OYUN EKRANI ============ -->
+    <section id="screen-game" class="screen">
+      <header class="topbar game-topbar">
+        <button class="pill coin-pill small" data-action="open-shop">
+          <img class="coin" src="assets/ui/coin.png" alt="" draggable="false"><b class="coin-count">0</b><span class="plus">+</span>
+        </button>
+        <div class="level-title"><span data-i18n="level">Seviye</span> <b id="gameLevel">1</b></div>
+        <div class="topbar-right">
+          <button class="icon-btn" data-action="pause" aria-label="Menü"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14"/></svg></button>
+        </div>
+      </header>
+
+      <div id="boardWrap"><div id="board"></div></div>
+
+      <!-- Taşı Kaldır jokeriyle çıkarılan, eşlerini bekleyen kilitli taşlar -->
+      <div id="bank" class="bank"></div>
+
+      <!-- Kazan: 7 yuvalı sepet (kodda "tray") -->
+      <div id="tray" class="tray"></div>
+
+      <div class="jokers">
+        <button class="joker" data-joker="undo"><span class="j-icon"><img src="assets/jokers/undo.png" alt="" draggable="false"></span><span class="j-name" data-i18n="jUndo">Geri Al</span><b class="j-count"></b></button>
+        <button class="joker" data-joker="remove"><span class="j-icon"><img src="assets/jokers/remove.png" alt="" draggable="false"></span><span class="j-name" data-i18n="jRemove">Taşı Kaldır</span><b class="j-count"></b></button>
+        <button class="joker" data-joker="shuffle"><span class="j-icon"><img src="assets/jokers/shuffle.png" alt="" draggable="false"></span><span class="j-name" data-i18n="jShuffle">Karıştır</span><b class="j-count"></b></button>
+        <button class="joker" data-joker="expand"><span class="j-icon"><img src="assets/jokers/expand.png" alt="" draggable="false"></span><span class="j-name" data-i18n="jExpand">Genişlet</span><b class="j-count"></b></button>
+      </div>
+    </section>
+
+    <!-- ============ MODALLAR ============ -->
+    <div id="modal" class="modal-backdrop" hidden>
+      <div class="modal-card" id="modalCard"></div>
+    </div>
+
+    <div id="toast" class="toast" hidden></div>
+  </div>
+
+  <script src="js/i18n.js?v=1"></script>
+  <script src="js/storage.js?v=1"></script>
+  <script src="js/audio.js?v=1"></script>
+  <script src="js/level.js?v=1"></script>
+  <script src="js/game.js?v=1"></script>
+  <script src="js/ui.js?v=1"></script>
+</body>
+</html>
