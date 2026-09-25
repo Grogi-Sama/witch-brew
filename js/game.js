@@ -170,6 +170,12 @@
 
   function popEffect() {
     trayEl.classList.remove("pop"); void trayEl.offsetWidth; trayEl.classList.add("pop");
+    // Kazandan mor duman yükselir
+    var r = trayEl.getBoundingClientRect(), puff = document.createElement("img");
+    puff.className = "smoke-puff"; puff.src = "assets/ui/smoke.png"; puff.alt = "";
+    puff.style.left = (r.left + r.width / 2) + "px"; puff.style.top = r.top + "px";
+    document.body.appendChild(puff);
+    setTimeout(function () { puff.remove(); }, 750);
   }
 
   function checkEnd() {

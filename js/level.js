@@ -1,24 +1,19 @@
 // Seviye üretici. Tüm konumlar "taş birimi" cinsinden: 1 birim = 1 taş genişliği.
 // Her seviye her açılışta rastgele yeniden dizilir, ama zorluk seviye numarasıyla artar.
 (function () {
-  // Taş türleri (cadı malzemeleri). İlk 16'sı baştan açık; gerisi bu SIRAYLA,
-  // seviye ilerledikçe ikişer ikişer açılır (bkz. RT.unlockedCount).
-  // Görsel: assets/tiles/<ad>.png. Görseli henüz gelmemiş taşlarda geçici emoji
-  // gösterilir — PNG eklendikçe adını RT.TILE_ART'a yaz.
+  // Taş türleri (cadı malzemeleri) = assets/tiles/<ad>.png. İlk 16'sı baştan açık;
+  // gerisi bu SIRAYLA, seviye ilerledikçe ikişer ikişer açılır (bkz. RT.unlockedCount).
   // Sıra = sprite sheet sırası (soldan sağa, yukarıdan aşağı): assets/source/tiles-1/2/3.webp
-  RT.TILE_EMOJI = {
-    // 1. sayfa (baştan açık 16 taş)
-    mushroom: "🍄", bat: "🦇", frog: "🐸", spider: "🕷️", potion: "🧪", crystal: "🔮", candle: "🕯️", eye: "👁️",
-    moon: "🌙", apple: "🍎", pumpkin: "🎃", skull: "💀", cat: "🐈‍⬛", owl: "🦉", mandrake: "🌱", feather: "🪶",
+  RT.TILE_TYPES = [
+    "mushroom", "bat", "frog", "spider", "potion", "crystal", "candle", "eye",
+    "moon", "apple", "pumpkin", "skull", "cat", "owl", "mandrake", "feather",
     // 2. sayfa
-    snake: "🐍", broom: "🧹", bone: "🦴", star: "⭐", key: "🗝️", scroll: "📜", gem: "💎", garlic: "🧄",
-    rose: "🌹", snail: "🐌", lizard: "🦎", rat: "🐀", beetle: "🪲", wand: "🪄", amulet: "🧿", spellbook: "📖",
+    "snake", "broom", "bone", "star", "key", "scroll", "gem", "garlic",
+    "rose", "snail", "lizard", "rat", "beetle", "wand", "amulet", "spellbook",
     // 3. sayfa
-    scorpion: "🦂", pepper: "🌶️", acorn: "🌰", honey: "🍯", mortar: "🥣", fang: "🦷", wisp: "🔥", frost: "❄️",
-    berries: "🫐", leaf: "🍂", hat: "🎩", caterpillar: "🐛", nest: "🪺", ghost: "👻", hourglass: "⏳", mirror: "🪞"
-  };
-  RT.TILE_TYPES = Object.keys(RT.TILE_EMOJI);
-  RT.TILE_ART = {}; // PNG'si hazır olan türler, ör. { mushroom: true }
+    "scorpion", "pepper", "acorn", "honey", "mortar", "fang", "wisp", "frost",
+    "berries", "leaf", "hat", "caterpillar", "nest", "ghost", "hourglass", "mirror"
+  ];
 
   // ---- Yeni taş kilidi ----
   // Seviye 15'ten başlayarak her 8 seviyede 2 yeni taş: 15, 23, 31 … son ikili seviye 135'te.
@@ -36,14 +31,13 @@
   };
   RT.tileSrc = function (type) { return "assets/tiles/" + type + ".png"; };
   RT.tileImg = function (type, cls) {
-    if (!RT.TILE_ART[type]) return '<span class="' + (cls || "face") + ' emoji">' + RT.TILE_EMOJI[type] + "</span>";
     return '<img class="' + (cls || "face") + '" src="' + RT.tileSrc(type) + '" alt="" draggable="false">';
   };
   // Açılmış taşların ve arayüz görsellerinin önceden yüklenmesi (ilk seviyede
   // taşlar "sonradan belirmesin"). unlockedCount aşağıda tanımlı, bu yüzden fonksiyon.
   function preload() {
-    RT.TILE_TYPES.slice(0, RT.unlockedCount(RT.save.level + 8)).filter(function (t) { return RT.TILE_ART[t]; }).map(RT.tileSrc).concat([
-      "assets/ui/coin.png",
+    RT.TILE_TYPES.slice(0, RT.unlockedCount(RT.save.level + 8)).map(RT.tileSrc).concat([
+      "assets/ui/coin.png", "assets/ui/smoke.png",
       "assets/jokers/undo.png", "assets/jokers/remove.png", "assets/jokers/shuffle.png", "assets/jokers/expand.png"
     ]).forEach(function (src) { new Image().src = src; });
   }

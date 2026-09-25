@@ -117,9 +117,9 @@ button { font-family: inherit; cursor: pointer; border: 0; color: inherit; }
 }
 .logo { text-align: center; color: var(--white); }
 .logo-icons { display: flex; justify-content: center; align-items: flex-end; gap: 4px; margin-bottom: 4px; }
-.logo-icons > * { font-size: 60px; line-height: 1; filter: drop-shadow(0 4px 0 rgba(0,0,0,.18)); animation: bob 3s ease-in-out infinite; }
-.logo-icons > :nth-child(2) { font-size: 74px; animation-delay: -1s; }
-.logo-icons > :nth-child(3) { animation-delay: -2s; }
+.logo-icons img { width: 72px; height: 72px; filter: drop-shadow(0 4px 0 rgba(0,0,0,.18)); animation: bob 3s ease-in-out infinite; }
+.logo-icons img:nth-child(2) { width: 88px; height: 88px; animation-delay: -1s; }
+.logo-icons img:nth-child(3) { animation-delay: -2s; }
 img { -webkit-user-drag: none; user-select: none; }
 .logo h1 { margin: 0; font-size: 44px; font-weight: 800; line-height: 1.05; text-shadow: 0 4px 0 rgba(0,0,0,.18); }
 .logo-top {
@@ -161,10 +161,11 @@ img { -webkit-user-drag: none; user-select: none; }
 .btn:disabled { filter: grayscale(.6); opacity: .7; }
 .btn svg { display: inline-block; width: 24px; height: 24px; vertical-align: -5px; margin-right: 8px; }
 .btn-play {
-  --face1: #ffb46e; --face2: #ff7f2a; --edge: #d95f14; --txt: var(--white);
-  font-size: 28px; padding: 14px 18px; text-shadow: 0 2px 0 rgba(120,45,10,.45);
+  /* Zombi yeşili */
+  --face1: #c6ee7e; --face2: #7cbf3f; --edge: #55892a; --txt: var(--white);
+  font-size: 28px; padding: 14px 18px; text-shadow: 0 2px 0 rgba(35,70,15,.55);
 }
-.btn-play svg { width: 26px; height: 26px; vertical-align: -4px; filter: drop-shadow(0 2px 0 rgba(120,30,10,.45)); }
+.btn-play svg { width: 26px; height: 26px; vertical-align: -4px; filter: drop-shadow(0 2px 0 rgba(35,70,15,.55)); }
 /* ---------- Isırılmış Oyna butonu ----------
    Sarmalayıcı (.bite) maskeyle sağ üst köşeden diş izli bir parça koparır.
    Sarmalayıcının altındaki boşluk, butonun 3D kenarı maskeyle kesilmesin diye.
@@ -191,12 +192,36 @@ img { -webkit-user-drag: none; user-select: none; }
 .bite:active { animation: none; }
 @keyframes breathe { 50% { transform: scale(1.035); } }
 
-/* ---------- Örümcek ağı süsü (Eğitim butonu sol üst köşe) ----------
-   Geçici emoji; UI görselleri gelince assets/ui/cobweb.png ile değişecek. */
+/* ---------- Süsler ----------
+   Örümcek ağı: Eğitim butonunun sol üst köşesine yapışık. */
 .deco-web {
-  position: absolute; top: -10px; left: -8px; font-size: 34px; line-height: 1;
-  transform: rotate(-12deg); opacity: .9; pointer-events: none; z-index: 1;
-  filter: grayscale(1) brightness(1.6) drop-shadow(0 1px 0 rgba(0,0,0,.25));
+  position: absolute; top: -4px; left: -4px; width: 46px; height: auto;
+  pointer-events: none; z-index: 1; opacity: .95;
+}
+/* Sarkan örümcek: menünün sol üstünden ipiyle iner, yavaşça sallanır */
+.deco-spider {
+  position: absolute; top: 0; left: 34px; z-index: 2; pointer-events: none;
+  display: flex; flex-direction: column; align-items: center;
+  transform-origin: 50% 0; animation: swing 4.5s ease-in-out infinite;
+}
+.deco-spider i { width: 1.5px; height: 70px; background: rgba(255,255,255,.55); }
+.deco-spider img { width: 38px; margin-top: -12px; }
+@keyframes swing { 0%, 100% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } }
+/* Pencerelerin üst kenarından damlayan yeşil sümük */
+.modal-card::before {
+  content: ""; position: absolute; top: -5px; left: 22px; width: 44%; height: 40px;
+  background: url(../assets/ui/slime.png) top left / 100% auto no-repeat;
+  pointer-events: none; z-index: 1;
+}
+.modal-card.ad::before { display: none; }
+/* Eşleşme anında kazandan yükselen mor duman */
+.smoke-puff {
+  position: fixed; z-index: 50; width: 90px; pointer-events: none;
+  transform: translate(-50%, -50%); animation: puff .7s ease-out forwards;
+}
+@keyframes puff {
+  from { opacity: .95; transform: translate(-50%, -30%) scale(.4); }
+  to { opacity: 0; transform: translate(-50%, -110%) scale(1.25); }
 }
 .btn-play.small { font-size: 17px; padding: 6px 14px; width: auto; border-radius: 14px; box-shadow: 0 4px 0 var(--outline), inset 0 -3px 0 var(--edge); }
 .btn-blue { --face1: #c9a3ff; --face2: #8a4fe0; --edge: #6a35b8; --txt: var(--white); text-shadow: 0 2px 0 rgba(50,20,90,.45); }
@@ -219,13 +244,6 @@ img { -webkit-user-drag: none; user-select: none; }
   transition: filter .15s;
 }
 .tile .face { width: 86%; height: 86%; object-fit: contain; pointer-events: none; }
-/* Geçici emoji taşlar (görseller gelene kadar) */
-.emoji { display: grid; place-items: center; line-height: 1; font-size: calc(var(--tile) * .6); }
-.t-tile.emoji, .t-mini.emoji, .t-face.emoji { font-size: 28px; }
-.t-row .t-tile.emoji { font-size: 38px; }
-.d-img.emoji { font-size: 52px; }
-.pack-img.emoji { font-size: 54px; }
-.starter .pack-img.emoji { font-size: 44px; }
 .tile.covered { filter: brightness(.62) saturate(.55); }
 .tile:not(.covered):not(.in-bank):active { transform: scale(.94); }
 #board.shake { animation: shake .45s; }

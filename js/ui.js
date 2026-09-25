@@ -179,11 +179,8 @@
   }
 
   // ---------- Mağaza (test) ----------
-  // Paket görselleri: assets/shop/<paket id>.png. Görseller gelene kadar geçici emoji.
-  var PACK_EMOJI = { starter: "🎁", pack1: "🪙", pack2: "👛", pack3: "🏺", pack4: "🧪", pack5: "🧰", pack6: "👑" };
-  var PACK_ART = false; // assets/shop/*.png hazır olunca true yap
+  // Paket görselleri: assets/shop/<paket id>.png
   function packIcon(id) {
-    if (!PACK_ART) return '<span class="pack-img emoji">' + PACK_EMOJI[id] + "</span>";
     return '<img class="pack-img" src="assets/shop/' + id + '.png" alt="" draggable="false">';
   }
 
