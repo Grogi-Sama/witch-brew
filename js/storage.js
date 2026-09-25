@@ -14,8 +14,13 @@
     JOKER_PRICE: 25,                  // 1 joker (ya da 1 ödüllü reklam)
     CONTINUE_PRICE: 30,               // kazan dolunca coinle devam (reklam alternatifi)
     AD_SKIP_SEC: 5,                   // sahte reklamda "Reklamı Geç" butonu bu kadar saniye sonra çıkar
+    // Oyna'ya basınca çıkan tam ekran reklam (bkz. PLAN.md):
+    AD_FREE_LEVELS: 3,                // ilk 3 seviye reklamsız
+    AD_COOLDOWN_MS: 60 * 1000,        // iki reklam arası en az 60 sn (ödüllü reklamlar da sayılır)
+    // Tek seferlik "Reklamları Kaldır": zorunlu reklamları kaldırır, ödüllüler kalır
+    REMOVE_ADS: { id: "noads", usd: 5.49, try: 79.99 },
     TRAY_SIZE: 7,
-    BANK_MAX: 6,                      // bekleme alanında en fazla 6 taş (= 2 kez Taşı Kaldır)
+    BANK_MAX: 6,                      // bekleme alanında en fazla 6 taş (= 2 kez Kepçeyle Al)
     // Coin paketleri. Fiyatlar mağazada ülke ülke girilir; oyun yayında fiyat
     // yazısını mağazadan alır. Buradaki try/usd yalnızca web test sürümü için.
     COIN_PACKS: [
@@ -41,6 +46,8 @@
       tutorialSeen: false,
       discovered: 16,                        // "Yeni malzeme" penceresinde gösterilmiş taş sayısı
       starterBought: false,                  // başlangıç paketi alındı mı (tek seferlik)
+      noAds: false,                          // "Reklamları Kaldır" satın alındı mı
+      lastAdAt: 0,                           // son reklamın bittiği an (ms)
       settings: { musicVol: 50, sfxVol: 80, lang: null } // ses seviyeleri 0-100
     };
   }
@@ -61,6 +68,15 @@
   RT.persist = function () {
     try { localStorage.setItem(KEY, JSON.stringify(RT.save)); } catch (e) {}
   };
+
+  // ---- Reklam kuralı ----
+  // Oyna'da tam ekran reklam: satın alınmamışsa, seviye > 3 ise ve son reklamdan
+  // bu yana en az 60 sn geçtiyse. "Tekrar Dene" hiç reklam göstermez (ui.js).
+  RT.needsInterstitial = function (level) {
+    var s = RT.save, C = RT.CONFIG;
+    return !s.noAds && level > C.AD_FREE_LEVELS && Date.now() - s.lastAdAt >= C.AD_COOLDOWN_MS;
+  };
+  RT.markAdShown = function () { RT.save.lastAdAt = Date.now(); RT.persist(); };
 
   RT.spendCoins = function (n) {
     if (RT.save.coins < n) return false;

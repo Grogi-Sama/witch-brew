@@ -62,7 +62,14 @@
   };
 
   // ---------- Oyun başlatma ----------
-  function play() {
+  // opts.retry: "Tekrar Dene" (reklam yok) · opts.adDone: reklam az önce gösterildi
+  function play(opts) {
+    opts = opts || {};
+    if (!opts.adDone && !opts.retry && RT.needsInterstitial(RT.save.level)) {
+      closeModal();
+      showInterstitial(function () { play({ adDone: true }); });
+      return;
+    }
     var fresh = RT.newTilesAt(RT.save.level);
     if (fresh.length && RT.unlockedCount(RT.save.level) > RT.save.discovered) {
       showDiscovery(fresh);
@@ -77,7 +84,7 @@
   function showDiscovery(types) {
     RT.save.discovered = RT.unlockedCount(RT.save.level);
     RT.persist();
-    handlers.go = play;
+    handlers.go = function () { play({ adDone: true }); };
     RT.sfx("win");
     openModal(
       '<div class="discover">' + types.map(function (t) { return '<span class="d-tile">' + RT.tileImg(t, "d-img") + "</span>"; }).join("") + "</div>" +
@@ -90,7 +97,7 @@
 
   // ---------- Kazandın / Kaybettin ----------
   RT.ui.showWin = function (level) {
-    handlers.next = play;
+    handlers.next = function () { play(); };
     handlers.menu = function () { closeModal(); show("menu"); };
     openModal(
       '<div class="m-emoji">🏆</div>' +
@@ -103,7 +110,7 @@
   };
 
   RT.ui.showLose = function () {
-    handlers.retry = play;
+    handlers.retry = function () { play({ retry: true }); };
     handlers.menu = function () { closeModal(); show("menu"); };
     openModal(
       '<div class="m-emoji">💥</div>' +
@@ -158,7 +165,7 @@
   var adTimer = null;
   function watchAd(onReward) {
     var left = RT.CONFIG.AD_SKIP_SEC;
-    handlers.skipAd = function () { clearInterval(adTimer); onReward(); };
+    handlers.skipAd = function () { clearInterval(adTimer); RT.markAdShown(); onReward(); };
     openModal(
       '<div class="ad-screen"><span class="ad-tag">' + RT.t("adTag") + '</span>' +
       '<div class="m-emoji spin">📺</div><h2>' + RT.t("adPlaying") + "</h2></div>" +
@@ -176,6 +183,29 @@
       btn.classList.add("ready");
       btn.textContent = RT.t("adSkip") + " ⏭";
     }, 1000);
+  }
+
+  // Tam ekran (geçişli) reklam: Oyna'ya basınca, ödülsüz. Gerçek SDK'da AdMob
+  // "interstitial" olacak. Şimdilik AD_SKIP_SEC saniye sonra kapatılabilir.
+  function showInterstitial(done) {
+    var left = RT.CONFIG.AD_SKIP_SEC, el = document.createElement("div");
+    el.className = "interstitial";
+    el.innerHTML =
+      '<span class="ad-tag">' + RT.t("adTag") + "</span>" +
+      '<button class="ad-x" disabled>' + left + "</button>" +
+      '<div class="ad-body"><div class="m-emoji spin">📺</div><h2>' + RT.t("adFullTitle") + "</h2>" +
+      "<p>" + RT.t("adFullNote") + "</p></div>";
+    document.body.appendChild(el);
+    var x = el.querySelector(".ad-x");
+    var timer = setInterval(function () {
+      left--;
+      if (left > 0) { x.textContent = left; return; }
+      clearInterval(timer);
+      x.disabled = false; x.textContent = "✕";
+    }, 1000);
+    x.addEventListener("click", function () {
+      RT.sfx("click"); RT.markAdShown(); el.remove(); done();
+    });
   }
 
   // ---------- Mağaza (test) ----------
@@ -205,6 +235,18 @@
       RT.ui.toast(RT.t("starterBought"));
       showShop(onClose);
     };
+    handlers.buyNoAds = function () {
+      if (RT.save.noAds) return;
+      RT.save.noAds = true; RT.persist();
+      RT.ui.toast(RT.t("noAdsBought"));
+      showShop(onClose);
+    };
+    var na = RT.CONFIG.REMOVE_ADS;
+    var noAds = '<div class="starter noads"><span class="pack-img noads-icon">📺</span>' +
+      '<div class="starter-info"><b>' + RT.t("noAdsTitle") + "</b>" +
+      "<span>" + RT.t("noAdsText") + "</span></div>" +
+      (RT.save.noAds ? '<b class="owned">' + RT.t("noAdsOwned") + "</b>"
+                     : '<button class="btn btn-blue small" data-m="buyNoAds">' + RT.priceLabel(na) + "</button>") + "</div>";
     var sp = RT.CONFIG.STARTER_PACK;
     var starter = RT.save.starterBought ? "" :
       '<div class="starter">' + packIcon("starter") +
@@ -224,7 +266,7 @@
     openModal(
       '<button class="m-close" data-m="close">✕</button>' +
       "<h2>" + RT.t("shopTitle") + "</h2>" +
-      '<div class="shop-scroll">' + starter + '<div class="pack-grid">' + packs + "</div></div>" +
+      '<div class="shop-scroll">' + starter + noAds + '<div class="pack-grid">' + packs + "</div></div>" +
       '<p class="small">' + RT.t("shopNote") + "</p>",
       { cls: "shop" }
     );

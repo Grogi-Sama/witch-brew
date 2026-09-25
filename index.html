@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=6">
+  <link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
   <!-- Arka plan: gece moru gradyan + yükselen kazan kabarcıkları (dekoratif) -->
@@ -43,7 +43,7 @@
 
 
         <div class="menu-row">
-          <button class="btn btn-soft" data-action="open-tutorial"><img class="deco-web" src="assets/ui/cobweb.png" alt="" aria-hidden="true" draggable="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></svg><span data-i18n="tutorial">Eğitim</span></button>
+          <button class="btn btn-soft" data-action="open-tutorial"><span class="deco-web" aria-hidden="true">🕸️</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></svg><span data-i18n="tutorial">Eğitim</span></button>
           <button class="btn btn-soft" data-action="open-settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span data-i18n="settings">Ayarlar</span></button>
         </div>
       </div>
@@ -63,7 +63,7 @@
 
       <div id="boardWrap"><div id="board"></div></div>
 
-      <!-- Taşı Kaldır jokeriyle çıkarılan, eşlerini bekleyen kilitli taşlar -->
+      <!-- Kepçeyle Al jokeriyle çıkarılan, eşlerini bekleyen kilitli taşlar -->
       <div id="bank" class="bank"></div>
 
       <!-- Kazan: 7 yuvalı sepet (kodda "tray") -->
@@ -71,7 +71,7 @@
 
       <div class="jokers">
         <button class="joker" data-joker="undo"><span class="j-icon"><img src="assets/jokers/undo.png" alt="" draggable="false"></span><span class="j-name" data-i18n="jUndo">Geri Al</span><b class="j-count"></b></button>
-        <button class="joker" data-joker="remove"><span class="j-icon"><img src="assets/jokers/remove.png" alt="" draggable="false"></span><span class="j-name" data-i18n="jRemove">Taşı Kaldır</span><b class="j-count"></b></button>
+        <button class="joker" data-joker="remove"><span class="j-icon"><img src="assets/jokers/remove.png" alt="" draggable="false"></span><span class="j-name" data-i18n="jRemove">Kepçeyle Al</span><b class="j-count"></b></button>
         <button class="joker" data-joker="shuffle"><span class="j-icon"><img src="assets/jokers/shuffle.png" alt="" draggable="false"></span><span class="j-name" data-i18n="jShuffle">Karıştır</span><b class="j-count"></b></button>
         <button class="joker" data-joker="expand"><span class="j-icon"><img src="assets/jokers/expand.png" alt="" draggable="false"></span><span class="j-name" data-i18n="jExpand">Genişlet</span><b class="j-count"></b></button>
       </div>
@@ -85,11 +85,11 @@
     <div id="toast" class="toast" hidden></div>
   </div>
 
-  <script src="js/i18n.js?v=6"></script>
-  <script src="js/storage.js?v=6"></script>
-  <script src="js/audio.js?v=6"></script>
-  <script src="js/level.js?v=6"></script>
-  <script src="js/game.js?v=6"></script>
-  <script src="js/ui.js?v=6"></script>
+  <script src="js/i18n.js?v=7"></script>
+  <script src="js/storage.js?v=7"></script>
+  <script src="js/audio.js?v=7"></script>
+  <script src="js/level.js?v=7"></script>
+  <script src="js/game.js?v=7"></script>
+  <script src="js/ui.js?v=7"></script>
 </body>
 </html>

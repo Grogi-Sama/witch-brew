@@ -19,7 +19,7 @@
       width: built.width,
       height: built.height,
       tray: [],            // sepetteki taşlar
-      bank: [],            // Taşı Kaldır ile bekletilen taşlar
+      bank: [],            // Kepçeyle Al ile bekletilen taşlar
       trayMax: RT.CONFIG.TRAY_SIZE,
       expanded: false,
       continued: false,    // "Reklam izle, devam et" bu seviyede kullanıldı mı
