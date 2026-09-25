@@ -394,6 +394,7 @@
       { e: '<span class="t-tray">' + ["frog", "frog", "bat", "potion", "potion", "eye"].map(function (n) { return RT.tileImg(n, "t-mini"); }).join("") + "<i></i></span>", k: "t2" },
       { e: '<span class="t-layers"><b>' + RT.tileImg("owl", "t-face") + '</b><b class="dim">' + RT.tileImg("candle", "t-face") + "</b></span>", k: "t3" },
       { e: "", k: "t4", extra: J("undo", "jUndo", "t4Undo") + J("remove", "jRemove", "t4Remove") + J("shuffle", "jShuffle", "t4Shuffle") + J("expand", "jExpand", "t4Expand") },
+      { e: '<span class="recipe t-recipe"><span class="r-step done">' + RT.tileImg("frog", "r-img") + '</span><i class="r-arrow">›</i><span class="r-step next">' + RT.tileImg("bat", "r-img") + '</span><i class="r-arrow">›</i><span class="r-step">' + RT.tileImg("potion", "r-img") + "</span></span>", k: "t6" },
       { e: "🏆", k: "t5" }
     ];
     var s = steps[step], last = step === steps.length - 1;

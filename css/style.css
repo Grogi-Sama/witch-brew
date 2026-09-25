@@ -253,6 +253,31 @@ img { -webkit-user-drag: none; user-select: none; }
 @keyframes shake { 25% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } 75% { transform: rotate(-1deg); } }
 .flyer { position: fixed; z-index: 9999; pointer-events: none; --tile: 44px; }
 
+/* ---------- İksir tarifi şeridi ---------- */
+.recipe {
+  align-self: center; display: flex; align-items: center; gap: 6px;
+  margin: 0 12px 2px; padding: 5px 12px 5px 10px; border-radius: 16px;
+  background: linear-gradient(#fff6de, #efd9a6); border: 2.5px solid var(--outline);
+  box-shadow: 0 4px 0 var(--outline); transition: background .3s;
+}
+.recipe .r-label { font-weight: 800; font-size: 15px; color: var(--outline); margin-right: 2px; }
+.recipe .r-arrow { font-style: normal; font-weight: 800; color: #a8895a; }
+.r-step {
+  width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center;
+  background: rgba(255,255,255,.6); border: 2px dashed #c9ad7a; position: relative;
+  filter: grayscale(.6) opacity(.7);
+}
+.r-step .r-img { width: 84%; height: 84%; object-fit: contain; }
+.r-step.next { filter: none; border: 2px solid var(--coral); box-shadow: 0 0 0 3px rgba(255,138,61,.3); animation: bob 1.6s ease-in-out infinite; }
+.r-step.done { filter: none; border: 2px solid #3fb950; background: #e6ffe9; }
+.r-step.done::after {
+  content: "✓"; position: absolute; right: -6px; bottom: -6px; width: 18px; height: 18px; border-radius: 50%;
+  background: #3fb950; color: var(--white); font-size: 12px; font-weight: 800; display: grid; place-items: center;
+  border: 2px solid var(--outline);
+}
+.r-step.pop { animation: pop .35s; }
+.recipe.complete { background: linear-gradient(#e6ffe9, #b9f0c4); }
+
 /* ---------- Bekleme alanı (Kepçeyle Al) ---------- */
 .bank {
   display: flex; justify-content: center; gap: 6px; min-height: 0; height: 0;

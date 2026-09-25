@@ -43,21 +43,73 @@
     o.start(start); o.stop(start + dur + 0.05);
   }
 
+  // Filtrelenmiş kısa gürültü patlaması ("puf", "fış" sesleri için)
+  var noiseBuf = null;
+  function noise(start, dur, opts) {
+    opts = opts || {};
+    if (!noiseBuf) {
+      noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+      var d = noiseBuf.getChannelData(0);
+      for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    }
+    var src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    src.buffer = noiseBuf;
+    f.type = opts.filter || "bandpass";
+    f.frequency.setValueAtTime(opts.freq || 1200, start);
+    if (opts.freqTo) f.frequency.exponentialRampToValueAtTime(opts.freqTo, start + dur);
+    f.Q.value = opts.q || 1;
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.exponentialRampToValueAtTime(opts.vol || 0.2, start + (opts.attack || 0.02));
+    g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+    src.connect(f); f.connect(g); g.connect(sfxGain);
+    src.start(start); src.stop(start + dur + 0.05);
+  }
+
+  // Cadı teması: D minör pentatonik (D F G A C) — müzikle aynı renk
   var SFX = {
-    // Taşa dokunma: yumuşak kabarcık "blup"
-    tap: function (t) { tone(420, t, 0.12, { slideTo: 780, vol: 0.25 }); },
-    // Üçleme: yükselen parlak arpej
+    // Taşa dokunma: tahta "tok" + minik alçak fokurtu
+    tap: function (t) {
+      tone(310, t, 0.07, { type: "triangle", vol: 0.22, attack: 0.003 });
+      tone(180, t + 0.02, 0.1, { slideTo: 300, vol: 0.12 });
+    },
+    // Üçleme: büyülü çan + parıltı
     match: function (t) {
-      [660, 880, 1320].forEach(function (f, i) { tone(f, t + i * 0.06, 0.25, { type: "triangle", vol: 0.2 }); });
+      [587.3, 880, 1174.7].forEach(function (f, i) {
+        tone(f, t + i * 0.05, 0.5, { vol: 0.16, attack: 0.004 });
+        tone(f * 2, t + i * 0.05, 0.25, { vol: 0.04, attack: 0.004 });
+      });
+      noise(t, 0.35, { filter: "highpass", freq: 6000, vol: 0.04 });
     },
-    joker: function (t) { tone(300, t, 0.3, { slideTo: 900, type: "triangle", vol: 0.2 }); },
-    click: function (t) { tone(600, t, 0.06, { vol: 0.15 }); },
-    error: function (t) { tone(200, t, 0.18, { type: "square", vol: 0.08 }); },
+    // Joker: "puf" diye büyü dumanı + yükselen ıslık
+    joker: function (t) {
+      noise(t, 0.4, { freq: 400, freqTo: 2500, q: 0.8, vol: 0.25 });
+      tone(440, t + 0.05, 0.35, { slideTo: 1320, type: "triangle", vol: 0.1 });
+    },
+    click: function (t) { tone(520, t, 0.05, { type: "triangle", vol: 0.14, attack: 0.002 }); },
+    // Hata: boğuk, alçak "tımp"
+    error: function (t) { tone(140, t, 0.2, { slideTo: 100, vol: 0.2 }); },
+    // Tarifte bir adım: küçük çan
+    recipeStep: function (t) {
+      tone(1174.7, t + 0.12, 0.6, { vol: 0.12, attack: 0.003 });
+      tone(1760, t + 0.2, 0.5, { vol: 0.08, attack: 0.003 });
+    },
+    // Tarif tamam: yukarı doğru parıltılı glissando
+    recipe: function (t) {
+      [587.3, 698.5, 784, 880, 1046.5, 1174.7, 1396.9].forEach(function (f, i) {
+        tone(f, t + 0.1 + i * 0.05, 0.4, { vol: 0.1, attack: 0.003 });
+      });
+      noise(t + 0.1, 0.6, { filter: "highpass", freq: 7000, vol: 0.05 });
+    },
+    // Kazandın: D minör arpej, sonunda D majöre "büyülü" çözülme
     win: function (t) {
-      [523, 659, 784, 1046, 1318].forEach(function (f, i) { tone(f, t + i * 0.1, 0.5, { type: "triangle", vol: 0.2 }); });
+      [293.7, 349.2, 440, 587.3].forEach(function (f, i) { tone(f, t + i * 0.11, 0.5, { type: "triangle", vol: 0.16 }); });
+      [293.7, 370, 440, 587.3].forEach(function (f) { tone(f, t + 0.5, 1.4, { vol: 0.1, attack: 0.02 }); });
+      tone(1174.7, t + 0.55, 1.2, { vol: 0.06, attack: 0.005 });
     },
+    // Kaybettin: iksir "fısss" diye söner, inen boğuk notalar
     lose: function (t) {
-      [392, 330, 262].forEach(function (f, i) { tone(f, t + i * 0.18, 0.45, { type: "sine", vol: 0.22 }); });
+      noise(t, 0.7, { freq: 3000, freqTo: 300, q: 0.7, vol: 0.18 });
+      [349.2, 293.7, 220].forEach(function (f, i) { tone(f, t + 0.15 + i * 0.2, 0.5, { vol: 0.16 }); });
     }
   };
 

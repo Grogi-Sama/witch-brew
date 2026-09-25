@@ -14,7 +14,8 @@ Yanglegeyang tarzı üçlü eşleştirme oyunu. Kardeş proje "Triple Match – 
 - **Reklamları Kaldır:** Var, tek seferlik satın alım. Zorunlu reklamları kaldırır; ödüllü reklamlar kalır.
 - **Ekonomi:** Jokerler coinle veya ödüllü reklamla alınır (ödüllü reklam, kullanıcının onayladığı ücretsiz kaynak). Coin başka ücretsiz yoldan verilmez.
 - **Can (sonradan eklendi, 2026-09-25):** Yumuşak can sistemi: en fazla 5 can, 20 dakikada 1 can dolar, yalnızca kaybedince 1 can gider (seviyeden çıkmak can götürmez). Can: reklamla +1 (sınırsız) veya coinle (eksik can başına 20, tamamı en fazla 50). Cansız oyuncuya Oyna reklamı gösterilmez, can penceresi açılır.
-- **Reklamları Kaldır fiyatı:** Şimdilik $5,49 / ₺79,99 (kullanıcı onayı bekliyor).
+- **Reklamları Kaldır:** Kalıcı, tek seferlik, $5,49 / ₺79,99 (kullanıcı onayladı). Oyna reklamları kalkar; can/joker için ödüllü reklam isteğe bağlı kalır. (1 aylık seçenek konuşuldu; abonelik altyapısı gerektirdiği ve oyuncuyu kızdıracağı için kalıcıda karar kılındı.)
+- **İksir tarifi:** Her seviyede sıralı bir tarif (2-3 malzeme, her biri 1 üçleme). Sırası gelen malzeme eşleşince tarif ilerler; tamamlanınca bu seviye için kazana +1 yuva. Ekonomiye (coin/joker) dokunmaz.
 - **Joker adı:** "Taşı Kaldır" → "Kepçeyle Al" (EN "Scoop Out"); ilk 3 malzemeyi kazandan yukarı alır.
 - **İmza mekanik:** İksir tarifi, bonus hedef (zorunlu değil). Zorunlu tarif seviyeleri ileride eklenebilir.
 - **Başlangıç:** Blue Ocean kodunun kopyası (git geçmişi olmadan). Can ve takvim sökülür; kazan teması ve tarif eklenir. Blue Ocean'a dokunulmaz.

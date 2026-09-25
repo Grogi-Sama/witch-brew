@@ -3,6 +3,7 @@
   var boardEl = document.getElementById("board");
   var wrapEl = document.getElementById("boardWrap");
   var trayEl = document.getElementById("tray");
+  var recipeEl = document.getElementById("recipe");
   var bankEl = document.getElementById("bank");
 
   var S = null;        // aktif seviyenin durumu
@@ -26,6 +27,7 @@
       pickSeq: 0,          // sepete atılma sırası (devam ederken en son atılanları bulmak için)
       history: [],         // Geri Al için: sepete atılan son taşlar
       flying: 0,           // uçuş animasyonu süren taş sayısı
+      recipe: makeRecipe(level, built.tiles),
       over: false
     };
     document.getElementById("gameLevel").textContent = level;
@@ -33,8 +35,48 @@
     renderBoard();
     renderTray();
     renderBank();
+    renderRecipe();
     RT.game.renderJokers();
   };
+
+  // ---------- İksir tarifi ----------
+  // Her seviyede sıralı bir tarif: 2 malzeme (10. seviyeden sonra 3), her biri
+  // 1 üçleme. Yalnızca sırası gelen malzemenin eşleşmesi tarifi ilerletir.
+  // Tamamlanınca bu seviye için kazan 1 yuva büyür (bonus; zorunlu değil).
+  function makeRecipe(level, tiles) {
+    var types = [];
+    tiles.forEach(function (t) { if (types.indexOf(t.type) === -1) types.push(t.type); });
+    var steps = RT.shuffle(types).slice(0, level >= 10 ? 3 : 2);
+    return { steps: steps, done: 0, complete: false };
+  }
+
+  function renderRecipe(justDone) {
+    var R = S.recipe;
+    recipeEl.innerHTML = '<span class="r-label">' + RT.t("recipe") + "</span>" +
+      R.steps.map(function (type, i) {
+        var cls = i < R.done ? "done" : (i === R.done ? "next" : "");
+        if (i === justDone) cls += " pop";
+        return (i ? '<i class="r-arrow">›</i>' : "") +
+          '<span class="r-step ' + cls + '">' + RT.tileImg(type, "r-img") + "</span>";
+      }).join("");
+    recipeEl.classList.toggle("complete", R.complete);
+  }
+
+  function recipeMatched(type) {
+    var R = S.recipe;
+    if (R.complete || R.steps[R.done] !== type) return;
+    R.done++;
+    if (R.done === R.steps.length) {
+      R.complete = true;
+      S.trayMax += 1;
+      layout(); renderTray();
+      RT.sfx("recipe");
+      RT.ui.toast(RT.t("recipeDone"));
+    } else {
+      RT.sfx("recipeStep");
+    }
+    renderRecipe(R.done - 1);
+  }
 
   RT.game.isActive = function () { return S && !S.over; };
 
@@ -165,6 +207,7 @@
       RT.sfx("match");
       popEffect();
       renderBank();
+      recipeMatched(type);
     }
   }
 
