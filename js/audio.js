@@ -13,19 +13,48 @@
     master = ctx.createGain(); master.gain.value = 0.9; master.connect(ctx.destination);
     sfxGain = ctx.createGain(); sfxGain.gain.value = sfxLevel(); sfxGain.connect(master);
     musicGain = ctx.createGain(); musicGain.gain.value = 0; musicGain.connect(master);
+    // Ses motorunun durumu her değiştiğinde (açıldı, arka plana geçti, iOS'ta
+    // telefon/alarm yüzünden "interrupted" oldu) müziği buna göre başlat/durdur.
+    // resume() eşzamansız olduğu için müziği burada, durum gerçekten
+    // "running" olunca başlatmak şart.
+    ctx.onstatechange = function () { RT.updateMusic(); };
     return true;
   }
 
-  // Ayarlardaki 0-100 seviyeleri kazanca (gain) çevrilir
-  function sfxLevel() { return 0.6 * RT.save.settings.sfxVol / 100; }
-  function musicLevel() { return 1.0 * RT.save.settings.musicVol / 100; }
+  // Ayarlardaki 0-100 seviyeleri kazanca (gain) çevrilir. Kulak sesi logaritmik
+  // duyar; doğrusal çevirince %50 neredeyse %100 gibi duyuluyordu. Karesini
+  // almak çubuğu kulağa "eşit adımlı" yapar (%50 ≈ -12 dB).
+  function curve(v) { return (v / 100) * (v / 100); }
+  function sfxLevel() { return 0.6 * curve(RT.save.settings.sfxVol); }
+  function musicLevel() { return curve(RT.save.settings.musicVol); }
 
-  RT.setSfxVolume = function () { if (sfxGain) sfxGain.gain.value = sfxLevel(); };
+  // Seviyeyi yumuşakça (tıkırtısız) hedefe götür
+  function glide(param, target) {
+    var now = ctx.currentTime;
+    param.cancelScheduledValues(now);
+    param.setTargetAtTime(target, now, 0.08);
+  }
 
-  // Tarayıcılar sesi ancak ilk dokunuştan sonra açmaya izin veriyor
+  RT.setSfxVolume = function () { if (sfxGain) glide(sfxGain.gain, sfxLevel()); };
+
+  // Tarayıcılar sesi ancak kullanıcı dokunuşundan sonra açmaya izin veriyor.
+  // Mobilde (özellikle iOS Safari) bu izni "pointerdown" değil, parmağın
+  // kalktığı an (touchend/pointerup/click) verir — bu yüzden hepsini dinliyoruz.
+  // Oyun arka plandan dönünce iOS sesi yeniden kilitleyebilir; her dokunuşta
+  // tekrar denemek bunu da çözer.
+  var primed = false;
   RT.unlockAudio = function () {
     if (!ensure()) return;
-    if (ctx.state === "suspended") ctx.resume();
+    if (!primed) {
+      // iOS: dokunuş anında kısa bir sessiz ses çalmak motoru kesin olarak açar
+      primed = true;
+      var b = ctx.createBufferSource();
+      b.buffer = ctx.createBuffer(1, 1, 22050); b.connect(ctx.destination); b.start(0);
+    }
+    if (ctx.state !== "running" && !document.hidden) {
+      var p = ctx.resume();
+      if (p && p.catch) p.catch(function () {}); // izin yoksa sonraki dokunuşta yeniden denenir
+    }
     RT.updateMusic();
   };
 
@@ -179,6 +208,8 @@
   }
 
   function playBar() {
+    // Motor durmuşken nota planlanırsa, geri açılınca hepsi aynı anda çalar
+    if (ctx.state !== "running") return;
     var t = ctx.currentTime, i = chordIdx++ % CHORDS.length, ch = CHORDS[i];
     ch.forEach(function (f, k) {
       // Yumuşak ped: hafif akortsuz iki katman = sıcak, "büyülü" titreşim
@@ -199,9 +230,7 @@
   RT.updateMusic = function () {
     if (!ctx) return;
     var on = RT.save.settings.musicVol > 0 && ctx.state === "running";
-    musicGain.gain.cancelScheduledValues(ctx.currentTime);
-    musicGain.gain.setValueAtTime(musicGain.gain.value, ctx.currentTime);
-    musicGain.gain.linearRampToValueAtTime(on ? musicLevel() : 0, ctx.currentTime + 0.4);
+    glide(musicGain.gain, on ? musicLevel() : 0);
     if (on && !musicTimer) {
       if (!reverb) reverb = makeReverb();
       if (!drone) drone = startDrone();
@@ -213,9 +242,14 @@
     }
   };
 
-  // Uygulama arka plana geçince müziği durdur (telefonda önemli)
+  // Uygulama arka plana geçince sesi tamamen durdur (telefonda önemli).
+  // Geri dönünce açmayı dene; iOS izin vermezse ilk dokunuşta açılır.
+  // Müziğin başlatılıp durdurulmasını onstatechange üstlenir.
+  function onHide() { if (ctx && ctx.state === "running") ctx.suspend(); }
   document.addEventListener("visibilitychange", function () {
     if (!ctx) return;
-    if (document.hidden) ctx.suspend(); else { ctx.resume().then(RT.updateMusic); }
+    if (document.hidden) onHide();
+    else { var p = ctx.resume(); if (p && p.catch) p.catch(function () {}); }
   });
+  window.addEventListener("pagehide", onHide);
 })();

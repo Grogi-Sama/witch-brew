@@ -433,8 +433,10 @@
     b.addEventListener("click", function () { RT.sfx("click"); ACTIONS[b.dataset.action](); });
   });
 
-  // İlk dokunuşta sesi aç (tarayıcı kuralı)
-  document.addEventListener("pointerdown", RT.unlockAudio, { once: false, passive: true });
+  // Dokunuşlarda sesi aç (tarayıcı kuralı; mobilde izin parmak kalkınca gelir)
+  ["pointerdown", "pointerup", "touchend", "click", "keydown"].forEach(function (ev) {
+    document.addEventListener(ev, RT.unlockAudio, { passive: true, capture: true });
+  });
 
   // ---------- Dekoratif kazan kabarcıkları ----------
   (function bubbles() {
