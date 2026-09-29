@@ -5,10 +5,11 @@ Uygulama kimliği: `com.omnipopgames.witchbrew` (ilk yüklemeden sonra değişti
 Sıra: önce Android, sonra iOS.
 
 ## Senin yapacakların
-- [ ] **D-U-N-S numarası** (şirket için; ücretsiz, 1-2 hafta sürebilir) — iki mağaza da istiyor
-- [ ] **omnipopgames.com** alan adı (otomatik yenileme açık)
+- [~] **D-U-N-S numarası**: Apple kaydı üzerinden 29.09.2026'da başvuruldu, D&B'den dönüş bekleniyor (5-30 gün). Yazım: `OMNI MDC TEKNOLOJI SANAYI VE TICARET ANONIM SIRKETI`
+- [x] **omnipopgames.com** ve **.com.tr** alan adları (hosting.com.tr), DNS Cloudflare'de
+- [x] Şirket e-postası **info@omnipopgames.com** (Zoho, SPF/DKIM/DMARC)
 - [ ] **Google Play Console** kurum hesabı (25 $, bir kez)
-- [ ] **Apple Developer Program** kurum hesabı (99 $/yıl)
+- [~] **Apple Developer Program** kurum hesabı (99 $/yıl): kişisel bilgiler ve D-U-N-S talebi girildi; numara gelince kayda devam
 - [ ] **AdMob** hesabı (şirket adına, ödeme/vergi bilgileri)
 - [ ] **RevenueCat** hesabı (ücretsiz) → proje "Witch's Brew" → Google Play ve App Store uygulamalarını bağla
 - [ ] **Android Studio** kurulumu (Windows) — emülatör ve derleme için
@@ -35,7 +36,8 @@ Sıra: önce Android, sonra iOS.
 - [x] Mağaza paketinde JS küçültme/karıştırma (`npm run build`)
 - [x] Satın alma altyapısı: RevenueCat (coin paketleri, başlangıç paketi, Reklamları Kaldır, Satın Alımları Geri Yükle)
 - [ ] RevenueCat API anahtarlarını `js/iap.js` içine yazmak (hesap açılınca)
-- [ ] Gizlilik politikası (TR/EN) + `app-ads.txt` → omnipopgames.com
+- [x] Şirket sitesi + TR/EN gizlilik politikası: https://omnipopgames.com/privacy (kaynak: C:\Projects\omnipopgames.com, Cloudflare Workers statik)
+- [ ] `app-ads.txt` (AdMob yayıncı kimliği gelince) + canonical etiketi için siteyi yeniden yükle
 - [ ] Gerçek AdMob kodlarına geçiş (`js/ads.js` USE_TEST_ADS=false, AndroidManifest / Info.plist uygulama kimlikleri)
 - [ ] İmzalı sürüm paketi (AAB) ve Play Console'a yükleme adımları
 - [ ] Mağaza sayfası: TR/EN açıklamalar, ekran görüntüleri, 1024×500 tanıtım görseli
