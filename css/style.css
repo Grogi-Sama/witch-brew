@@ -109,6 +109,13 @@ button { font-family: inherit; cursor: pointer; border: 0; color: inherit; }
 .pill.small .plus { width: 20px; height: 20px; font-size: 15px; }
 .level-title { text-align: center; color: var(--white); font-size: 20px; text-shadow: 0 2px 0 rgba(0,0,0,.2); }
 .level-title b { font-weight: 800; }
+/* Zor seviye etiketi (her 10. seviye) */
+.hard-tag { margin-left: 8px; }
+.level-badge .hard-tag {
+  display: inline-block; font-size: 15px; font-weight: 800; color: var(--white); vertical-align: 2px;
+  background: linear-gradient(#e0473a, #a8231a); padding: 1px 10px; border-radius: 999px; border: 2px solid var(--outline);
+}
+.hard-tag[hidden] { display: none !important; }
 
 /* ---------- Ana menü ---------- */
 .menu-center {

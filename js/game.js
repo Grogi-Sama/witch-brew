@@ -31,6 +31,8 @@
       over: false
     };
     document.getElementById("gameLevel").textContent = level;
+    document.getElementById("gameHard").hidden = !RT.isHardLevel(level);
+    if (RT.isHardLevel(level)) RT.ui.toast(RT.t("hardToast"));
     layout();
     renderBoard();
     renderTray();

@@ -52,20 +52,40 @@
   }
   RT.shuffle = shuffle;
 
-  // Seviye numarasından zorluk ayarları
+  // ---- Zorluk eğrisi ----
+  // Hedef: oyuncu 500. seviyeye kadar kademe kademe ilerlesin (tools/balance-sim.mjs ile ölçülür).
+  // - Taban: başta hızlı, sonra giderek yavaşlayan (logaritmik) artış; 500'de tavan.
+  //   Zorluğu en çok malzeme türü sayısı, sonra taş sayısı belirler; kat sayısının etkisi az.
+  // - Testere dişi: her 10. seviye "zor", her 5. seviye biraz daha zor,
+  //   zor seviyenin hemen arkasından gelen seviye "nefes" (kolay).
+  var CURVE_END = 500;
+  RT.levelProgress = function (n) {
+    return Math.min(1, Math.log(1 + n / 15) / Math.log(1 + CURVE_END / 15));
+  };
+  RT.isHardLevel = function (n) { return n >= 10 && n % 10 === 0; };
+
   RT.levelConfig = function (n) {
     var cfg;
     if (n === 1) cfg = { types: 3, main: 18, layers: 2, stack: 0 };
     else if (n === 2) cfg = { types: 4, main: 30, layers: 3, stack: 0 };
-    else if (n === 3) cfg = { types: 5, main: 42, layers: 4, stack: 0 };
+    else if (n === 3) cfg = { types: 5, main: 36, layers: 3, stack: 0 };
     else {
+      var p = RT.levelProgress(n);
       cfg = {
-        types: Math.min(6 + Math.floor((n - 4) / 3), RT.MAX_TYPES_PER_LEVEL),
-        main: Math.min(48 + (n - 4) * 3, 120),
-        layers: Math.min(4 + Math.floor((n - 4) / 4), 9),
-        stack: Math.min(4 + Math.floor((n - 4) / 3), 12) // her iki deste için
+        types: Math.round(5.5 + p * 4.4),      // 6 → 10
+        main: Math.round(42 + p * 36),         // 42 → 78
+        layers: Math.round(3.5 + p * 3.5),     // 4 → 7
+        stack: n < 6 ? 0 : Math.round(1 + p * 5) // 1 → 6 (her iki deste için)
       };
+      if (RT.isHardLevel(n)) {                // zor seviye
+        cfg.types += 2; cfg.main += 9; cfg.stack += 2; cfg.hard = true;
+      } else if (n % 10 === 5) {              // biraz zor
+        cfg.types += 1;
+      } else if (n > 10 && n % 10 === 1) {    // zor seviyenin ardından nefes
+        cfg.types -= 1; cfg.main -= 9; cfg.easy = true;
+      }
     }
+    cfg.types = Math.min(cfg.types, RT.MAX_TYPES_PER_LEVEL);
     // Toplam taş sayısı 3'ün katı olmalı
     var total = cfg.main + cfg.stack * 2;
     cfg.main -= total % 3;

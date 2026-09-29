@@ -22,6 +22,7 @@
     document.querySelectorAll(".lives-count").forEach(function (e) { e.textContent = s.lives; });
     document.querySelectorAll(".coin-count").forEach(function (e) { e.textContent = shortNum(s.coins); });
     document.getElementById("menuLevel").textContent = s.level;
+    document.getElementById("menuHard").hidden = !RT.isHardLevel(s.level);
     document.querySelector("#menuLives .lives-timer").textContent = full ? "" : RT.formatTime(RT.msToNextLife());
     document.querySelectorAll(".lives-pill").forEach(function (p) { p.classList.toggle("not-full", !full); });
     var nl = document.getElementById("noLivesTimer");
