@@ -11,6 +11,10 @@ Sıra: önce Android, sonra iOS.
 - [ ] **Apple Developer Program** kurum hesabı (99 $/yıl)
 - [ ] **AdMob** hesabı (şirket adına, ödeme/vergi bilgileri)
 - [ ] **RevenueCat** hesabı (ücretsiz) → proje "Witch's Brew" → Google Play ve App Store uygulamalarını bağla
+- [ ] **Android Studio** kurulumu (Windows) — emülatör ve derleme için
+- [ ] AdMob'da uygulamayı "henüz mağazada değil" olarak ekle → Android ve iOS için
+      birer **Geçiş (Interstitial)** ve **Ödüllü (Rewarded)** reklam birimi oluştur → kodları Claude'a ver
+- [ ] AdMob → Gizlilik ve mesajlaşma: **GDPR (AB/İngiltere) mesajı** ve iOS için **IDFA açıklama mesajı** oluştur
 
 ## Mağaza ürün kimlikleri (iki mağazada da BİREBİR bu adlarla, değiştirilemez)
 | Kimlik | Tür | Oyunda | Fiyat (USD / TL) |
@@ -23,10 +27,6 @@ Sıra: önce Android, sonra iOS.
 | `coins_7500` | Tüketilebilir | 7.500 altın | 54,99 / 649,99 |
 | `starter_pack` | Tüketilmeyen (tek sefer) | 250 altın + her jokerden 3 | 2,19 / 34,99 |
 | `remove_ads` | Tüketilmeyen (kalıcı) | Oyna reklamlarını kaldırır | 5,49 / 79,99 |
-- [ ] **Android Studio** kurulumu (Windows) — emülatör ve derleme için
-- [ ] AdMob'da uygulamayı "henüz mağazada değil" olarak ekle → Android ve iOS için
-      birer **Geçiş (Interstitial)** ve **Ödüllü (Rewarded)** reklam birimi oluştur → kodları Claude'a ver
-- [ ] AdMob → Gizlilik ve mesajlaşma: **GDPR (AB/İngiltere) mesajı** ve iOS için **IDFA açıklama mesajı** oluştur
 
 ## Claude'un yaptıkları / yapacakları
 - [x] Capacitor kurulumu, Android projesi, ikonlar ve açılış ekranı
