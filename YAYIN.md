@@ -40,7 +40,10 @@ Sıra: önce Android, sonra iOS.
 - [ ] `app-ads.txt` (AdMob yayıncı kimliği gelince) + canonical etiketi için siteyi yeniden yükle
 - [ ] Gerçek AdMob kodlarına geçiş (`js/ads.js` USE_TEST_ADS=false, AndroidManifest / Info.plist uygulama kimlikleri)
 - [ ] İmzalı sürüm paketi (AAB) ve Play Console'a yükleme adımları
-- [ ] Mağaza sayfası: TR/EN açıklamalar, ekran görüntüleri, 1024×500 tanıtım görseli
+- [x] Mağaza görselleri (Google Play): `store/play/{tr,en}/01-06.png` (1080×1920) ve `feature.png` (1024×500)
+      Yeniden üretmek için: yerel sunucu açıkken `node tools/store-shots.mjs && node tools/store-frames.mjs`
+- [ ] Mağaza sayfası metinleri: TR/EN kısa ve uzun açıklama, anahtar kelimeler
+- [ ] App Store görselleri (iPhone 6.9": 1320×2868) — iOS aşamasında
 - [ ] iOS projesi (Mac'te), App Store Connect, inceleme notu (Blue Ocean'dan farklar)
 - [ ] "Test modu" yazılarının kaldırılması
 

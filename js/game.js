@@ -33,11 +33,14 @@
     document.getElementById("gameLevel").textContent = level;
     document.getElementById("gameHard").hidden = !RT.isHardLevel(level);
     if (RT.isHardLevel(level)) RT.ui.toast(RT.t("hardToast"));
+    // Tarif şeridi ve bekleme alanı tahtanın yüksekliğini etkiler: önce onlar
+    // çizilir, sonra tahta kalan alana göre ölçeklenir (yoksa taşlar tarifin üstüne taşar)
+    renderRecipe();
+    renderBank();
+    renderTray();
     layout();
     renderBoard();
-    renderTray();
-    renderBank();
-    renderRecipe();
+    renderTray(); // yuva boyutu layout'ta güncellendi
     RT.game.renderJokers();
   };
 
@@ -83,15 +86,18 @@
   RT.game.isActive = function () { return S && !S.over; };
 
   // ---------- Yerleşim ----------
+  // Önce kazanın yuva boyutu belirlenir (kazanın yüksekliği buna bağlı), SONRA
+  // tahtaya kalan alan ölçülür. Ters sırada ölçülünce tahta tarif şeridine ve
+  // kazana taşıyordu. Kazan yuvaları bu fonksiyondan önce çizilmiş olmalı.
   function layout() {
     if (!S) return;
-    var w = wrapEl.clientWidth, h = wrapEl.clientHeight;
+    var slot = Math.floor(Math.min((trayEl.clientWidth - 16) / S.trayMax, 58));
+    document.documentElement.style.setProperty("--slot", slot + "px");
+    var w = wrapEl.clientWidth, h = wrapEl.clientHeight; // okuma, yeni --slot ile yeniden yerleşimi zorlar
     unit = Math.floor(Math.min(w / (S.width + 0.2), h / (S.height + 0.25), 64));
     boardEl.style.width = (S.width * unit) + "px";
     boardEl.style.height = (S.height * unit + unit * 0.12) + "px";
     document.documentElement.style.setProperty("--tile", unit + "px");
-    var slot = Math.floor(Math.min((trayEl.clientWidth - 16) / S.trayMax, 58));
-    document.documentElement.style.setProperty("--slot", slot + "px");
   }
   window.addEventListener("resize", function () { layout(); if (S) { renderBoard(); renderTray(); renderBank(); } });
 
@@ -135,9 +141,17 @@
     trayEl.classList.toggle("danger", S.tray.length >= S.trayMax - 2);
   }
 
+  var bankTimer = null;
   function renderBank() {
     bankEl.innerHTML = "";
-    bankEl.classList.toggle("has-items", S.bank.length > 0);
+    var had = bankEl.classList.contains("has-items"), has = S.bank.length > 0;
+    bankEl.classList.toggle("has-items", has);
+    // Bekleme alanı açılıp kapanınca tahtanın alanı değişir: geçiş animasyonu
+    // (0,2 sn) bitince tahtayı yeniden ölçekle
+    if (had !== has) {
+      clearTimeout(bankTimer);
+      bankTimer = setTimeout(function () { if (S) { layout(); renderBoard(); } }, 230);
+    }
     S.bank.forEach(function (t) {
       var el = document.createElement("div");
       el.className = "tile in-bank";
