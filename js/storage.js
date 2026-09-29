@@ -22,7 +22,7 @@
     AD_FREE_LEVELS: 3,                // ilk 3 seviye reklamsız
     AD_COOLDOWN_MS: 60 * 1000,        // iki reklam arası en az 60 sn (ödüllü reklamlar da sayılır)
     // Tek seferlik "Reklamları Kaldır": zorunlu reklamları kaldırır, ödüllüler kalır
-    REMOVE_ADS: { id: "noads", usd: 5.49, try: 79.99 },
+    REMOVE_ADS: { id: "noads", usd: 5.49, try: 79.99 },   // mağaza ürünleri: js/iap.js (RT.PRODUCTS)
     TRAY_SIZE: 7,
     BANK_MAX: 6,                      // bekleme alanında en fazla 6 taş (= 2 kez Kepçeyle Al)
     // Coin paketleri. Fiyatlar mağazada ülke ülke girilir; oyun yayında fiyat

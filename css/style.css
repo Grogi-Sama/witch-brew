@@ -429,6 +429,7 @@ img { -webkit-user-drag: none; user-select: none; }
 .seg button { padding: 4px 14px; border-radius: 9px; background: none; font-weight: 800; }
 .seg button.on { background: var(--coral); color: var(--white); }
 .set-links { font-size: 14px; color: #8a7a9c; }
+.restore-link { font-size: 14px; font-weight: 700; color: #6a35b8; }
 .set-links a { color: #6a35b8; font-weight: 700; }
 
 /* Eğitim */

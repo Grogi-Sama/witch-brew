@@ -272,46 +272,63 @@
     return '<img class="pack-img" src="assets/shop/' + id + '.png" alt="" draggable="false">';
   }
 
+  // Fiyat: uygulamada mağazanın yerel fiyatı, web'de test fiyatı
+  function priceFor(pack) { return RT.iap.price(pack.id) || RT.priceLabel(pack); }
+
+  // Satın alma: uygulamada gerçek ödeme (grant, mağaza onayından SONRA çalışır);
+  // web'de test modu (ödemesiz, doğrudan verir).
+  function purchase(packId, grant, okMsg, after) {
+    if (!RT.iap.native) { grant(); RT.ui.toast(okMsg + " (test)"); after(); return; }
+    RT.iap.buy(packId, grant, function (res) {
+      if (res === "ok") RT.ui.toast(okMsg);
+      else if (res === "unavailable") RT.ui.toast(RT.t("purchaseUnavailable"));
+      else if (res === "error") RT.ui.toast(RT.t("purchaseError"));
+      after();
+    });
+  }
+
   // onClose: mağaza kapanınca dönülecek pencere (yoksa sadece kapanır)
   function showShop(onClose) {
     handlers.close = onClose || closeModal;
+    function reopen() { refreshHud(); if (RT.game.renderJokers) RT.game.renderJokers(); showShop(onClose); }
     handlers.buy = function (b) {
-      // GERÇEK ÖDEME YOK. Mağaza entegrasyonunda burası uygulama içi satın
-      // alma (Google Play / App Store) onayından SONRA çalışacak.
       var p = RT.CONFIG.COIN_PACKS.filter(function (x) { return x.id === b.dataset.id; })[0];
-      RT.save.coins += p.coins; RT.persist(); refreshHud();
-      RT.ui.toast(RT.t("bought", { n: p.coins }));
-      showShop(onClose);
+      purchase(p.id, function () { RT.save.coins += p.coins; RT.persist(); },
+        RT.t("bought", { n: p.coins }), reopen);
     };
     handlers.buyStarter = function () {
       var sp = RT.CONFIG.STARTER_PACK;
       if (RT.save.starterBought) return;
-      RT.save.coins += sp.coins;
-      for (var j in RT.save.jokers) RT.save.jokers[j] += sp.jokers;
-      RT.save.starterBought = true;
-      RT.persist(); refreshHud(); if (RT.game.renderJokers) RT.game.renderJokers();
-      RT.ui.toast(RT.t("starterBought"));
-      showShop(onClose);
+      purchase(sp.id, function () {
+        RT.save.coins += sp.coins;
+        for (var j in RT.save.jokers) RT.save.jokers[j] += sp.jokers;
+        RT.save.starterBought = true;
+        RT.persist();
+      }, RT.t("starterBought"), reopen);
     };
     handlers.buyNoAds = function () {
       if (RT.save.noAds) return;
-      RT.save.noAds = true; RT.persist();
-      RT.ui.toast(RT.t("noAdsBought"));
-      showShop(onClose);
+      purchase("noads", function () { RT.save.noAds = true; RT.persist(); }, RT.t("noAdsBought"), reopen);
+    };
+    handlers.restore = function () {
+      RT.iap.restore(function (found, failed) {
+        RT.ui.toast(RT.t(failed ? "purchaseError" : (found ? "restoreDone" : "restoreNone")));
+        reopen();
+      });
     };
     var na = RT.CONFIG.REMOVE_ADS;
     var noAds = '<div class="starter noads"><span class="pack-img noads-icon">📺</span>' +
       '<div class="starter-info"><b>' + RT.t("noAdsTitle") + "</b>" +
       "<span>" + RT.t("noAdsText") + "</span></div>" +
       (RT.save.noAds ? '<b class="owned">' + RT.t("noAdsOwned") + "</b>"
-                     : '<button class="btn btn-blue small" data-m="buyNoAds">' + RT.priceLabel(na) + "</button>") + "</div>";
+                     : '<button class="btn btn-blue small" data-m="buyNoAds">' + priceFor(na) + "</button>") + "</div>";
     var sp = RT.CONFIG.STARTER_PACK;
     var starter = RT.save.starterBought ? "" :
       '<div class="starter">' + packIcon("starter") +
       '<div class="starter-info"><b>' + RT.t("starterTitle") + "</b>" +
       "<span>🪙 " + sp.coins + " + " + RT.t("starterJokers", { n: sp.jokers }) + "</span>" +
       "<small>" + RT.t("starterOnce") + "</small></div>" +
-      '<button class="btn btn-green small" data-m="buyStarter">' + RT.priceLabel(sp) + "</button></div>";
+      '<button class="btn btn-green small" data-m="buyStarter">' + priceFor(sp) + "</button></div>";
     var packs = RT.CONFIG.COIN_PACKS.map(function (p, i) {
       return '<div class="pack-card' + (p.badge ? " has-badge" : "") + '">' +
         (p.badge ? '<span class="pack-badge ' + p.badge + '">' + RT.t(p.badge === "best" ? "badgeBest" : "badgePopular") + "</span>" : "") +
@@ -319,13 +336,15 @@
         packIcon(p.id) +
         '<span class="pack-name">' + RT.t("pack" + (i + 1)) + "</span>" +
         '<span class="pack-coins">' + p.coins.toLocaleString(RT.lang === "tr" ? "tr-TR" : "en-US") + " 🪙</span>" +
-        '<button class="btn btn-play small" data-m="buy" data-id="' + p.id + '">' + RT.priceLabel(p) + "</button></div>";
+        '<button class="btn btn-play small" data-m="buy" data-id="' + p.id + '">' + priceFor(p) + "</button></div>";
     }).join("");
     openModal(
       '<button class="m-close" data-m="close">✕</button>' +
       "<h2>" + RT.t("shopTitle") + "</h2>" +
       '<div class="shop-scroll">' + starter + noAds + '<div class="pack-grid">' + packs + "</div></div>" +
-      '<p class="small">' + RT.t("shopNote") + "</p>",
+      (RT.iap.native
+        ? '<a href="#" class="restore-link" data-m="restore">' + RT.t("restore") + "</a>"
+        : '<p class="small">' + RT.t("shopNote") + "</p>"),
       { cls: "shop" }
     );
   }
@@ -471,5 +490,6 @@
   RT.applyI18n();
   refreshHud();
   RT.ads.init();
+  RT.iap.init();
   if (!RT.save.tutorialSeen) showTutorial(0);
 })();
