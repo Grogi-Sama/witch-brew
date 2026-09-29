@@ -1,0 +1,13 @@
+{
+  "appId": "com.omnipopgames.witchbrew",
+  "appName": "Witch's Brew",
+  "webDir": "www",
+  "backgroundColor": "#2a1646",
+  "android": {
+    "backgroundColor": "#2a1646"
+  },
+  "ios": {
+    "backgroundColor": "#2a1646",
+    "contentInset": "never"
+  }
+}

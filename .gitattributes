@@ -1,0 +1,3 @@
+# Unix betikleri Mac/Linux'ta çalışsın diye LF satır sonu
+android/gradlew text eol=lf
+*.sh text eol=lf

@@ -70,11 +70,32 @@
     return d;
   }
 
+  // Gizlilik politikası adresi (mağaza sayfalarında da aynısı yazılacak)
+  RT.PRIVACY_URL = "https://omnipopgames.com/privacy";
+
   RT.save = load();
   if (RT.save.lives > RT.CONFIG.LIVES_MAX) RT.save.lives = RT.CONFIG.LIVES_MAX;
+  // Uygulamada kayıt ayrıca cihazın kalıcı depolamasına (Capacitor Preferences)
+  // yazılır: iOS, WebView'in localStorage'ını yer açmak için silebiliyor.
+  var Cap = window.Capacitor;
+  var Prefs = Cap && Cap.isNativePlatform && Cap.isNativePlatform() ? Cap.registerPlugin("Preferences") : null;
   RT.persist = function () {
-    try { localStorage.setItem(KEY, JSON.stringify(RT.save)); } catch (e) {}
+    var json = JSON.stringify(RT.save);
+    try { localStorage.setItem(KEY, json); } catch (e) {}
+    if (Prefs) Prefs.set({ key: KEY, value: json }).catch(function () {});
   };
+  // localStorage silinmişse kalıcı depodaki kaydı geri yükle
+  if (Prefs) {
+    var hadLocal = false;
+    try { hadLocal = !!localStorage.getItem(KEY); } catch (e) {}
+    Prefs.get({ key: KEY }).then(function (r) {
+      if (r && r.value && !hadLocal) {
+        try { localStorage.setItem(KEY, r.value); location.reload(); } catch (e) {}
+      } else if (hadLocal && !(r && r.value)) {
+        RT.persist(); // ilk açılış: mevcut kaydı kalıcı depoya da yaz
+      }
+    }).catch(function () {});
+  }
 
   // ---- Can sistemi ----
   // Can tam değilse her LIFE_REGEN_MS'de bir can dolar. Uygulama kapalıyken

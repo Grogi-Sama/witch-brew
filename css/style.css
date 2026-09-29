@@ -428,6 +428,8 @@ img { -webkit-user-drag: none; user-select: none; }
 .seg { display: flex; background: #e3e8ea; border-radius: 14px; padding: 3px; border: 2.5px solid var(--outline); }
 .seg button { padding: 4px 14px; border-radius: 9px; background: none; font-weight: 800; }
 .seg button.on { background: var(--coral); color: var(--white); }
+.set-links { font-size: 14px; color: #8a7a9c; }
+.set-links a { color: #6a35b8; font-weight: 700; }
 
 /* Eğitim */
 .tutorial .t-visual { font-size: 48px; min-height: 60px; display: grid; place-items: center; }

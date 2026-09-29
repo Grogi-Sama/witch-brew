@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Witch\'s Brew</string>
+    <string name="title_activity_main">Witch\'s Brew</string>
+    <string name="package_name">com.omnipopgames.witchbrew</string>
+    <string name="custom_url_scheme">com.omnipopgames.witchbrew</string>
+</resources>

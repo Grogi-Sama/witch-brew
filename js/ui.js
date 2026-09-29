@@ -212,6 +212,12 @@
   // ödül butona basınca verilir.
   var adTimer = null;
   function watchAd(onReward) {
+    if (RT.ads.native) {
+      // Uygulamada gerçek ödüllü reklam; hazır değilse oyuncuya söylenir
+      RT.ads.rewarded(function () { RT.markAdShown(); onReward(); },
+                      function () { RT.ui.toast(RT.t("adNotReady")); });
+      return;
+    }
     var left = RT.CONFIG.AD_SKIP_SEC;
     handlers.skipAd = function () { clearInterval(adTimer); RT.markAdShown(); onReward(); };
     openModal(
@@ -236,6 +242,10 @@
   // Tam ekran (geçişli) reklam: Oyna'ya basınca, ödülsüz. Gerçek SDK'da AdMob
   // "interstitial" olacak. Şimdilik AD_SKIP_SEC saniye sonra kapatılabilir.
   function showInterstitial(done) {
+    if (RT.ads.native) {
+      RT.ads.interstitial(function (shown) { if (shown) RT.markAdShown(); done(); });
+      return;
+    }
     var left = RT.CONFIG.AD_SKIP_SEC, el = document.createElement("div");
     el.className = "interstitial";
     el.innerHTML =
@@ -345,6 +355,7 @@
     var st = RT.save.settings;
     handlers.close = function () { closeModal(); if (RT.game.isActive() && document.getElementById("screen-game").classList.contains("active")) showPause(); };
     handlers.lang = function (b) { setLang(b.dataset.lang); showSettings(); };
+    handlers.privacyOptions = function () { RT.ads.showPrivacyOptions(); };
     function slider(key, labelKey, icon) {
       var v = st[key];
       return '<div class="set-slider"><div class="set-head"><span>' + icon + " " + RT.t(labelKey) + "</span>" +
@@ -358,7 +369,9 @@
       '<div class="set-row"><span>' + RT.t("language") + '</span><div class="seg">' +
       '<button class="' + (RT.lang === "tr" ? "on" : "") + '" data-m="lang" data-lang="tr">TR</button>' +
       '<button class="' + (RT.lang === "en" ? "on" : "") + '" data-m="lang" data-lang="en">EN</button>' +
-      "</div></div>"
+      "</div></div>" +
+      '<div class="set-links"><a href="' + RT.PRIVACY_URL + '" target="_blank" rel="noopener">' + RT.t("privacyPolicy") + "</a>" +
+      (RT.ads.privacyOptionsRequired() ? ' · <a href="#" data-m="privacyOptions">' + RT.t("privacyOptions") + "</a>" : "") + "</div>"
     );
     // Çubuk hareket ettikçe seviye anında uygulanır; ses efektinde bırakınca örnek ses çalar
     card.querySelectorAll("[data-vol]").forEach(function (inp) {
@@ -457,5 +470,6 @@
   RT.lang = saved || ((navigator.language || "tr").toLowerCase().indexOf("tr") === 0 ? "tr" : "en");
   RT.applyI18n();
   refreshHud();
+  RT.ads.init();
   if (!RT.save.tutorialSeen) showTutorial(0);
 })();
