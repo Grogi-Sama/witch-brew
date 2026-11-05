@@ -27,7 +27,7 @@
 - Turkish and English
 - Android (Google Play) — iOS coming soon
 
-**Get it on Google Play:** _coming soon_ · **Website:** [omnipopgames.com](https://omnipopgames.com)
+**Get it on Google Play:** [play.google.com](https://play.google.com/store/apps/details?id=com.omnipopgames.witchbrew) · **Website:** [omnipopgames.com](https://omnipopgames.com)
 
 ## Tech
 
