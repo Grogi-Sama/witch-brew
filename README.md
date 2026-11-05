@@ -33,6 +33,10 @@
 
 HTML5 / JavaScript game packaged with Capacitor for Android and iOS, AdMob (with Google UMP consent) and in-app purchases via RevenueCat.
 
+## Made by
+
+Designed, built and published solo by **Onur Topuz** ([@Grogi-Sama](https://github.com/Grogi-Sama)) — from the first idea to game design, code, art direction, store listings, ads and in-app purchases, all the way to a live, revenue-earning game on Google Play. Built with AI assistants **Claude** and **Gemini**.
+
 ## Source code
 
 This repository is a **public showcase only**. The game's source code is proprietary and kept in a private repository.
@@ -41,7 +45,7 @@ This repository is a **public showcase only**. The game's source code is proprie
 
 ### Türkçe
 
-**Üçlü Eşleştirme – Cadı Kazanı**: Üç malzemeyi eşleştir, iksir tariflerini tamamla ve kazanın taşmasına izin verme. [Omnipop Games](https://omnipopgames.com) tarafından geliştirildi. Bu depo yalnızca tanıtım amaçlıdır; oyunun kaynak kodu gizli tutulmaktadır.
+**Üçlü Eşleştirme – Cadı Kazanı**: Üç malzemeyi eşleştir, iksir tariflerini tamamla ve kazanın taşmasına izin verme. [Omnipop Games](https://omnipopgames.com) tarafından geliştirildi. Fikirden mağazada gelir üreten oyuna kadar tüm süreç (tasarım, kod, görsel yönetim, mağaza sayfaları, reklam ve satın alma kurulumu) **Onur Topuz** tarafından, Claude ve Gemini yapay zekâ asistanlarıyla tek başına yürütüldü. Bu depo yalnızca tanıtım amaçlıdır; oyunun kaynak kodu gizli tutulmaktadır.
 
 ---
 
